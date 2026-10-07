@@ -21,6 +21,22 @@ class OtpController extends Controller
         return view('otp-verify', compact('challenge'));
     }
 
+    public function resend(OtpChallenge $challenge, OtpService $otpService): RedirectResponse
+    {
+        if ($challenge->verified_at) {
+            return redirect()->route('home')->with('success', 'এই OTP verification ইতিমধ্যে সম্পন্ন হয়েছে।');
+        }
+
+        $newChallenge = $otpService->send(
+            $challenge->phone,
+            $challenge->purpose,
+            $challenge->reference_type,
+            $challenge->reference_id
+        );
+
+        return redirect()->route('otp.show', $newChallenge)->with('success', 'নতুন OTP পাঠানোর অনুরোধ গ্রহণ করা হয়েছে।');
+    }
+
     public function verify(Request $request, OtpChallenge $challenge, OtpService $otpService): RedirectResponse
     {
         $request->validate([
