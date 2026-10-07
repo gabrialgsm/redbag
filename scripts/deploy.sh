@@ -18,11 +18,7 @@ echo "==> Installing PHP dependencies"
 composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
 
 echo "==> Installing frontend dependencies"
-if [ -f package-lock.json ]; then
-  npm ci
-else
-  npm install
-fi
+npm install
 npm run build
 
 echo "==> Backing up database before migration"
