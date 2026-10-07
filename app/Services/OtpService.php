@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\OtpChallenge;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class OtpService
@@ -28,6 +27,11 @@ class OtpService
         }
 
         $code = (string) random_int(100000, 999999);
+
+        // Only the newest challenge may remain valid.
+        if ($challenge) {
+            $challenge->update(['expires_at' => now()]);
+        }
 
         $challenge = OtpChallenge::create([
             'phone' => $phone,
