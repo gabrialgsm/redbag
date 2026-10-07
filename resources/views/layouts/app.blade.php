@@ -10,7 +10,7 @@
 <header class="site-header"><div class="container nav-wrap">
 <a href="{{ route('home') }}" class="brand"><img src="/images/redbag-logo.svg" alt="RedBag logo"></a>
 <nav class="desktop-nav"><a class="active" href="{{ route('home') }}">হোম</a><a href="{{ route('blood.request') }}">রক্তের জন্য আবেদন</a><a href="{{ route('donor.register') }}">রক্ত দিন</a><a href="{{ route('campaigns') }}">ক্যাম্পেইন</a><a href="{{ route('about') }}">আমাদের সম্পর্কে</a><a href="#contact">যোগাযোগ</a></nav>
-<div class="nav-actions"><button class="icon-btn" aria-label="Search">⌕</button><a class="btn btn-primary btn-small" href="{{ route('donor.register') }}">লগইন / রেজিস্টার</a></div>
+<div class="nav-actions"><button class="icon-btn" aria-label="Search">⌕</button>@if(session('donor_id'))<a class="btn btn-primary btn-small" href="{{ route('donor.dashboard') }}">আমার Dashboard</a>@else<a class="btn btn-primary btn-small" href="{{ route('donor.register') }}">লগইন / রেজিস্টার</a>@endif</div>
 </div></header>
 <main>@yield('content')</main>
 <footer id="contact" class="site-footer"><div class="container footer-grid">
