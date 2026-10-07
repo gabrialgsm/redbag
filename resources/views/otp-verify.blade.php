@@ -15,7 +15,13 @@
                 <input name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" required autofocus>
             </label>
             @error('code') <div class="field-error">{{ $message }}</div> @enderror
+            @error('phone') <div class="field-error">{{ $message }}</div> @enderror
             <button class="btn btn-primary" type="submit">Verify & Continue</button>
+        </form>
+
+        <form method="POST" action="{{ route('otp.resend', $challenge) }}" class="otp-resend-form">
+            @csrf
+            <button class="btn btn-soft btn-full" type="submit">নতুন OTP চাই</button>
         </form>
 
         <div class="notice notice-info">
