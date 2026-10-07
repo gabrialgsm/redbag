@@ -18,6 +18,11 @@
             <button class="btn btn-primary" type="submit">Verify & Continue</button>
         </form>
 
+        <form method="POST" action="{{ route('otp.resend', $challenge) }}" class="otp-resend-form">
+            @csrf
+            <button class="btn btn-soft btn-full" type="submit">নতুন OTP চাই</button>
+        </form>
+
         <div class="notice notice-info">
             <strong>Development mode:</strong> SMS provider এখনো যুক্ত করা হয়নি। বর্তমান log driver OTP-টি Laravel log-এ লিখে রাখে; production-এ SMS provider যুক্ত করার পর এই flow একই থাকবে।
         </div>
