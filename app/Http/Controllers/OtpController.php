@@ -49,8 +49,12 @@ class OtpController extends Controller
         $otpService->verify($challenge, $request->string('code')->toString());
 
         if ($challenge->purpose === OtpService::PURPOSE_DONOR_REGISTRATION) {
-            Donor::whereKey($challenge->reference_id)->update(['phone_verified_at' => now()]);
-            return redirect()->route('donor.register')->with('success', 'আপনার মোবাইল নম্বর সফলভাবে verified হয়েছে। এখন RED BAG team আপনার donor profile যাচাই করতে পারবে।');
+            $donor = Donor::findOrFail($challenge->reference_id);
+            $donor->update(['phone_verified_at' => now()]);
+            $request->session()->regenerate();
+            $request->session()->put('donor_id', $donor->id);
+
+            return redirect()->route('donor.dashboard')->with('success', 'আপনার মোবাইল নম্বর সফলভাবে verified হয়েছে। Donor dashboard থেকে availability সেট করুন।');
         }
 
         if ($challenge->purpose === OtpService::PURPOSE_BLOOD_REQUEST) {
