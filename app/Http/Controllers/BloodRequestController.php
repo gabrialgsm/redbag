@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\BloodRequest;
+use App\Services\OtpService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class BloodRequestController extends Controller
 {
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, OtpService $otpService): RedirectResponse
     {
         $data = $request->validate([
             'requester_name' => ['required','string','min:2','max:120'],
@@ -33,8 +34,15 @@ class BloodRequestController extends Controller
             'expires_at' => now()->addHours($data['urgency'] === 'emergency' ? 12 : 48),
         ]);
 
-        return redirect()->route('blood.request')->with('success',
-            "আপনার আবেদন গ্রহণ করা হয়েছে। Request ID: {$bloodRequest->request_code}। Verification-এর পর RED BAG donor matching শুরু করবে।"
+        $challenge = $otpService->send(
+            $bloodRequest->requester_phone,
+            OtpService::PURPOSE_BLOOD_REQUEST,
+            BloodRequest::class,
+            $bloodRequest->id
+        );
+
+        return redirect()->route('otp.show', $challenge)->with('success',
+            "আপনার আবেদন গ্রহণ করা হয়েছে। Request ID: {$bloodRequest->request_code}। এখন মোবাইল OTP দিয়ে আবেদনটি verify করুন।"
         );
     }
 }
