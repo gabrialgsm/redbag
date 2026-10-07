@@ -1,0 +1,47 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\BloodRequest;
+use App\Models\Donor;
+use App\Models\OtpChallenge;
+use App\Services\OtpService;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
+
+class OtpController extends Controller
+{
+    public function show(OtpChallenge $challenge): View|RedirectResponse
+    {
+        if ($challenge->verified_at) {
+            return redirect()->route('home')->with('success', 'এই OTP verification ইতিমধ্যে সম্পন্ন হয়েছে।');
+        }
+
+        return view('otp-verify', compact('challenge'));
+    }
+
+    public function verify(Request $request, OtpChallenge $challenge, OtpService $otpService): RedirectResponse
+    {
+        $request->validate([
+            'code' => ['required', 'digits:6'],
+        ], [
+            'code.required' => '৬ সংখ্যার OTP দিন।',
+            'code.digits' => 'OTP অবশ্যই ৬ সংখ্যার হতে হবে।',
+        ]);
+
+        $otpService->verify($challenge, $request->string('code')->toString());
+
+        if ($challenge->purpose === OtpService::PURPOSE_DONOR_REGISTRATION) {
+            Donor::whereKey($challenge->reference_id)->update(['phone_verified_at' => now()]);
+            return redirect()->route('donor.register')->with('success', 'আপনার মোবাইল নম্বর সফলভাবে verified হয়েছে। এখন RED BAG team আপনার donor profile যাচাই করতে পারবে।');
+        }
+
+        if ($challenge->purpose === OtpService::PURPOSE_BLOOD_REQUEST) {
+            BloodRequest::whereKey($challenge->reference_id)->update(['requester_phone_verified_at' => now()]);
+            return redirect()->route('blood.request')->with('success', 'আপনার মোবাইল নম্বর verified হয়েছে। এখন আবেদনটি verification queue-তে আছে।');
+        }
+
+        return redirect()->route('home')->with('success', 'OTP verification সম্পন্ন হয়েছে।');
+    }
+}
