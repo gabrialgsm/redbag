@@ -1,7 +1,16 @@
 <?php
-use IlluminateSupportFacadesRoute;
+
+use App\Http\Controllers\BloodRequestController;
+use App\Http\Controllers\DonorController;
+use Illuminate\Support\Facades\Route;
+
 Route::view('/', 'home')->name('home');
-Route::view('/blood-request', 'blood-request')->name('blood.request');
-Route::view('/become-a-donor', 'donor-register')->name('donor.register');
+
+Route::get('/blood-request', fn () => view('blood-request'))->name('blood.request');
+Route::post('/blood-request', [BloodRequestController::class, 'store'])->name('blood.request.store');
+
+Route::get('/become-a-donor', fn () => view('donor-register'))->name('donor.register');
+Route::post('/become-a-donor', [DonorController::class, 'store'])->name('donor.store');
+
 Route::view('/about', 'about')->name('about');
 Route::view('/campaigns', 'campaigns')->name('campaigns');
