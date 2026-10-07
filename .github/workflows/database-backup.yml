@@ -1,0 +1,36 @@
+name: RED BAG — Database Backup
+
+on:
+  schedule:
+    - cron: '0 20 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: redbag-db-backup
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Configure SSH
+        env:
+          CONTABO_HOST: ${{ secrets.CONTABO_HOST }}
+          CONTABO_SSH_KEY: ${{ secrets.CONTABO_SSH_KEY }}
+        run: |
+          set -e
+          mkdir -p ~/.ssh
+          printf '%s\n' "$CONTABO_SSH_KEY" > ~/.ssh/redbag_deploy
+          chmod 600 ~/.ssh/redbag_deploy
+          ssh-keyscan -H "$CONTABO_HOST" >> ~/.ssh/known_hosts
+
+      - name: Backup database
+        env:
+          CONTABO_HOST: ${{ secrets.CONTABO_HOST }}
+          CONTABO_USER: ${{ secrets.CONTABO_USER }}
+          REDBAG_DEPLOY_PATH: ${{ secrets.REDBAG_DEPLOY_PATH }}
+        run: |
+          set -e
+          ssh -i ~/.ssh/redbag_deploy -o IdentitiesOnly=yes "$CONTABO_USER@$CONTABO_HOST" \
+            "cd '$REDBAG_DEPLOY_PATH' && bash scripts/backup-db.sh"
