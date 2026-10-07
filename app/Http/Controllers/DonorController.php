@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Donor;
+use App\Services\OtpService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class DonorController extends Controller
 {
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, OtpService $otpService): RedirectResponse
     {
         $data = $request->validate([
             'name' => ['required','string','min:2','max:120'],
@@ -31,8 +32,15 @@ class DonorController extends Controller
             'consent_at' => now(),
         ]);
 
-        return redirect()->route('donor.register')->with('success',
-            "ধন্যবাদ {$donor->name}! আপনার RED BAG Donor ID {$donor->donor_code}। পরবর্তী ধাপে মোবাইল OTP verification সম্পন্ন করতে হবে।"
+        $challenge = $otpService->send(
+            $donor->phone,
+            OtpService::PURPOSE_DONOR_REGISTRATION,
+            Donor::class,
+            $donor->id
+        );
+
+        return redirect()->route('otp.show', $challenge)->with('success',
+            "ধন্যবাদ {$donor->name}! আপনার RED BAG Donor ID {$donor->donor_code} তৈরি হয়েছে। এখন মোবাইল OTP দিয়ে নম্বরটি যাচাই করুন।"
         );
     }
 }
