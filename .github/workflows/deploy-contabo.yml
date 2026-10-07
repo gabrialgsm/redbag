@@ -1,0 +1,55 @@
+name: RED BAG — Deploy to Contabo
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: redbag-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate required secrets
+        env:
+          CONTABO_HOST: ${{ secrets.CONTABO_HOST }}
+          CONTABO_USER: ${{ secrets.CONTABO_USER }}
+          CONTABO_SSH_KEY: ${{ secrets.CONTABO_SSH_KEY }}
+          REDBAG_DEPLOY_PATH: ${{ secrets.REDBAG_DEPLOY_PATH }}
+        run: |
+          set -e
+          test -n "$CONTABO_HOST" || { echo "Missing CONTABO_HOST"; exit 1; }
+          test -n "$CONTABO_USER" || { echo "Missing CONTABO_USER"; exit 1; }
+          test -n "$CONTABO_SSH_KEY" || { echo "Missing CONTABO_SSH_KEY"; exit 1; }
+          test -n "$REDBAG_DEPLOY_PATH" || { echo "Missing REDBAG_DEPLOY_PATH"; exit 1; }
+
+      - name: Configure SSH
+        env:
+          CONTABO_HOST: ${{ secrets.CONTABO_HOST }}
+          CONTABO_SSH_KEY: ${{ secrets.CONTABO_SSH_KEY }}
+        run: |
+          set -e
+          mkdir -p ~/.ssh
+          printf '%s\n' "$CONTABO_SSH_KEY" > ~/.ssh/redbag_deploy
+          chmod 600 ~/.ssh/redbag_deploy
+          ssh-keyscan -H "$CONTABO_HOST" >> ~/.ssh/known_hosts
+
+      - name: Deploy
+        env:
+          CONTABO_HOST: ${{ secrets.CONTABO_HOST }}
+          CONTABO_USER: ${{ secrets.CONTABO_USER }}
+          REDBAG_DEPLOY_PATH: ${{ secrets.REDBAG_DEPLOY_PATH }}
+        run: |
+          set -e
+          ssh -i ~/.ssh/redbag_deploy -o IdentitiesOnly=yes "$CONTABO_USER@$CONTABO_HOST" \
+            "cd '$REDBAG_DEPLOY_PATH' && bash scripts/deploy.sh"
+
+      - name: Deployment finished
+        run: echo "RED BAG deployment completed."
