@@ -5,7 +5,14 @@ APP_DIR="$(pwd)"
 cd "$APP_DIR"
 
 test -f .env || { echo "ERROR: .env not found"; exit 1; }
-command -v mysqldump >/dev/null 2>&1 || { echo "ERROR: mysqldump is not installed"; exit 1; }
+if command -v mariadb-dump >/dev/null 2>&1; then
+  DUMP_BIN="mariadb-dump"
+elif command -v mysqldump >/dev/null 2>&1; then
+  DUMP_BIN="mysqldump"
+else
+  echo "ERROR: mariadb-dump/mysqldump is not installed"
+  exit 1
+fi
 
 BACKUP_DIR="$APP_DIR/storage/backups/database"
 mkdir -p "$BACKUP_DIR"
@@ -32,7 +39,7 @@ file_put_contents(getenv("MYSQL_CNF"),
 
 DB_NAME="$(php -r '$e=parse_ini_file(".env",false,INI_SCANNER_RAW); echo $e["DB_DATABASE"];')"
 
-mysqldump --defaults-extra-file="$CNF" \
+$DUMP_BIN --defaults-extra-file="$CNF" \
   --single-transaction \
   --quick \
   --routines \
