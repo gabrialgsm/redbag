@@ -28,7 +28,10 @@ echo "==> Running database migrations"
 php artisan migrate --force
 
 echo "==> Clearing Laravel caches"
-php artisan optimize:clear
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
+php artisan event:clear
 
 echo "==> Rebuilding Laravel caches"
 php artisan config:cache
