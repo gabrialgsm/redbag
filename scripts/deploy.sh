@@ -27,8 +27,13 @@ bash scripts/backup-db.sh
 echo "==> Running database migrations"
 php artisan migrate --force
 
-echo "==> Clearing and rebuilding Laravel caches"
+echo "==> Clearing Laravel caches"
 php artisan optimize:clear
-php artisan optimize
+
+echo "==> Rebuilding Laravel caches"
+php artisan config:cache
+php artisan event:cache
+php artisan route:cache
+php artisan view:cache
 
 echo "==> Deployment successful: $(git rev-parse --short HEAD)"
