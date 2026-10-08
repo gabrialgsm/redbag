@@ -18,7 +18,7 @@ echo "==> Installing PHP dependencies"
 composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
 
 echo "==> Installing frontend dependencies"
-npm install
+npm ci
 npm run build
 
 echo "==> Backing up database before migration"
