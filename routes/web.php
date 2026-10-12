@@ -4,6 +4,8 @@ use App\Http\Controllers\BloodRequestController;
 use App\Http\Controllers\DonorController;
 use App\Http\Controllers\OtpController;
 use App\Http\Controllers\DonorDashboardController;
+use App\Http\Controllers\VolunteerAuthController;
+use App\Http\Controllers\VolunteerReviewController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'home')->name('home');
@@ -22,6 +24,14 @@ Route::get('/donor/dashboard', [DonorDashboardController::class, 'show'])->name(
 Route::post('/donor/availability', [DonorDashboardController::class, 'availability'])->middleware('throttle:10,1')->name('donor.availability');
 Route::post('/donor/profile', [DonorDashboardController::class, 'profile'])->middleware('throttle:10,1')->name('donor.profile');
 Route::post('/donor/logout', [DonorDashboardController::class, 'logout'])->name('donor.logout');
+
+Route::get('/volunteer/login', [VolunteerAuthController::class, 'show'])->middleware('throttle:10,1')->name('volunteer.login');
+Route::post('/volunteer/login', [VolunteerAuthController::class, 'login'])->middleware('throttle:5,1')->name('volunteer.login.submit');
+Route::middleware('volunteer')->prefix('volunteer')->name('volunteer.')->group(function () {
+    Route::post('/logout', [VolunteerAuthController::class, 'logout'])->name('logout');
+    Route::get('/requests', [VolunteerReviewController::class, 'index'])->name('requests');
+    Route::post('/requests/{bloodRequest}/review', [VolunteerReviewController::class, 'review'])->whereNumber('bloodRequest')->middleware('throttle:20,1')->name('requests.review');
+});
 
 Route::view('/about', 'about')->name('about');
 Route::view('/campaigns', 'campaigns')->name('campaigns');

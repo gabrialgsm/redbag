@@ -7,55 +7,64 @@
 
 ## Verified repository snapshot
 
-- Latest baseline commit before this P0 pass: `5a82b231ba5ea37f0da8dd388da5e654c9d1dca8` (`fix: correct Laravel entrypoint imports`).
+- Baseline before P0: `5a82b231ba5ea37f0da8dd388da5e654c9d1dca8`.
+- P0 truthfulness/security commit: `98c50836cee9b4ba5066de7cda9904e8e839ffbe`.
+- P0 follow-up copy correction: `d5c5e8ef15588f25e6eef2ec456ce27888ce3c5d`.
+- Test setup/health check: `500cc8c26495837d99576dce8e04b2643ab7f2dc` and `927d0cfff2e421bf4613f629a4bfa88f1dcb80fb`; clean test environment follow-up: `2fb132753baf0a8f430b51a19baddba0422a76ba`.
 - Stack: Laravel 13, PHP 8.3+, Blade, Vite/Tailwind CSS, MySQL-compatible DB.
-- Existing routes: homepage, blood-request submission, donor registration, OTP show/resend/verify, donor dashboard/profile/availability/logout, about and campaigns.
-- Existing models/tables: donors, blood_requests, otp_challenges. There are no test files in the current repository tree.
-- Latest observed deploy workflow run before this pass: success for `5a82b231ba5ea37f0da8dd388da5e654c9d1dca8`.
-- The live domain could not be reached from this execution environment; do not infer live availability from GitHub Actions alone.
+- Existing core data tables: donors, blood_requests, otp_challenges. New audit events table is additive.
+- Deployment now checks the public Laravel health endpoint `/up` after deployment.
+- Automated tests cover homepage truthfulness, safety copy and OTP production fail-closed behavior.
 
-## P0 changes in this commit
+## Implemented in this increment
 
-- Removed hard-coded impact metrics and fabricated recent request cards from the homepage.
-- Reworded homepage copy to disclose that automatic matching, notifications and volunteer review are not yet live.
-- Removed decorative search and inert newsletter actions; replaced dead footer/coverage/campaign links with real routes or removed them.
-- Added a Safety & Privacy page with clear limits and emergency-care guidance.
-- Restricted log-based OTP to local/testing environments; production OTP now fails closed because no SMS provider is integrated.
-- Added request/register and OTP throttles.
-- New donor records start unavailable until the phone is verified; donor/request creation checks OTP availability before writing records.
-- Masked phone numbers on the OTP screen.
+- Removed fabricated homepage metrics and hard-coded sample requests.
+- Corrected claims that implied matching, notifications or volunteer review were live.
+- Added Safety & Privacy page and removed inert/dead actions.
+- Production OTP is disabled unless a real delivery implementation exists; log OTP is restricted to local/testing.
+- Added basic route throttles.
+- Added a single-credential volunteer login gate configured only through server environment values.
+- Added a protected review queue for unexpired pending requests.
+- Volunteer approval is blocked until requester phone verification is recorded.
+- Volunteer actions (approve, reject, needs-info) create an audit event; approve moves the request to `verified`, reject closes it as `cancelled`, and needs-info remains pending with a recorded reason.
+- Added an additive `blood_request_events` migration.
+- Portal is disabled until production `.env` has `REDBAG_VOLUNTEER_EMAIL` and a bcrypt `REDBAG_VOLUNTEER_PASSWORD_HASH`. No production `.env` was changed.
 
 ## Current feature truth
 
-### Implemented in repository (not yet end-to-end verified)
+### Implemented (automated tests or deployment checks exist)
 - Donor and blood-request intake forms.
-- OTP challenge hashing, five-minute expiry, five-attempt cap and resend cooldown for local/testing.
-- Session-based donor dashboard and availability/profile changes.
-- Basic route-level request throttling.
+- OTP challenge hashing/expiry/attempt cap/resend cooldown in local/testing only.
+- Session-based donor dashboard and profile/availability updates.
+- Rate limits on intake, OTP and donor profile actions.
+- Volunteer portal login with one configured credential; no user/role management.
+- Request review queue and audit events for review decisions.
+- Homepage/safety truthfulness tests and OTP production-safety tests.
+- Deployment health check against `https://www.redbag.app/up`.
 
-### Explicitly not implemented
-- Production SMS/OTP delivery.
-- Volunteer/admin authentication, roles or review queue.
-- Verified request legitimacy checks and request state history.
-- Donor matching, donor alerts, accept/decline/maybe responses or safe contact handoff.
-- Public request tracking, cancellation/expiry processing and confirmed donation completion.
+### Still not implemented
+- Production SMS/OTP provider.
+- Multi-user volunteer/admin accounts, recovery, roles or organization management.
+- Automated donor matching, alerts, donor accept/decline/maybe responses or safe contact handoff.
+- Public request tracking token/page, requester cancellation, automated expiry or confirmed donation completion.
 - Abuse reporting, full privacy/retention operations and robust donor account recovery.
-- Automated tests/CI checks and end-to-end mobile/browser testing.
+- Medical compatibility decisions; these remain with qualified professionals/authorized services.
+- Full mobile/browser/accessibility testing and backup restore test.
 
-## P0/P1 release gates
+## Release gates
 
-1. Add automated tests for validation, OTP attempt/expiry/replay, session authorization and rate limits.
-2. Integrate a real SMS provider and delivery/error controls before enabling production OTP.
-3. Implement volunteer/admin authentication and role-based access before exposing a review queue.
-4. Add an explicit request state machine and audit trail.
-5. Match only phone-verified, available donors after human request review; never make clinical compatibility decisions.
-6. Add consent-aware donor responses and privacy-preserving request status lookup.
-7. Verify live HTTP responses, GitHub Actions deployment, application logs and mobile layouts after each change.
+1. Configure volunteer credentials in production `.env` before using the review portal.
+2. Integrate a real SMS provider before enabling production OTP.
+3. Add tests for request review transactions and authorization boundaries.
+4. Implement request tracking with a high-entropy token whose hash is stored; never expose personal data in public status pages.
+5. Match only phone-verified, reviewed requests to phone-verified, available donors; matching is a coordination suggestion, not a clinical decision.
+6. Add donor responses and consent-aware contact handoff.
+7. Verify live HTTP health and GitHub Actions deployment after each commit.
 8. Test backup restoration in a non-production environment.
 
 ## Production safety constraints
 
 - Never commit or overwrite production `.env`.
-- Never drop, reset, truncate or seed production tables as part of deployment.
-- Keep changes additive and use reviewed migrations only.
+- Never drop, reset, truncate or seed production tables.
+- Keep schema changes additive; preserve all existing donor/request data.
 - Never claim SMS, matching, notifications, volunteer review, verified donations or production readiness until implemented and tested.

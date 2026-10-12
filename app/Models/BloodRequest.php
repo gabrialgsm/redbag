@@ -1,7 +1,9 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class BloodRequest extends Model
 {
@@ -18,5 +20,10 @@ class BloodRequest extends Model
             'requester_phone_verified_at' => 'datetime',
             'expires_at' => 'datetime',
         ];
+    }
+
+    public function events(): HasMany
+    {
+        return $this->hasMany(BloodRequestEvent::class);
     }
 }
