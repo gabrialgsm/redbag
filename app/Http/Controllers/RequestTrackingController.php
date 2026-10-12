@@ -8,7 +8,6 @@ use App\Services\RequestTrackingTokenService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class RequestTrackingController extends Controller
@@ -51,7 +50,7 @@ class RequestTrackingController extends Controller
         DB::transaction(function () use ($bloodRequest): void {
             $locked = BloodRequest::whereKey($bloodRequest->id)->lockForUpdate()->firstOrFail();
 
-            if (!in_array($locked->status, ['pending_verification', 'needs_info', 'verified'], true)) {
+            if (!in_array($locked->status, ['pending_verification', 'needs_info', 'verified', 'matching', 'matched'], true)) {
                 abort(409, 'এই আবেদনটি এখন আর বাতিল করা যাবে না।');
             }
 

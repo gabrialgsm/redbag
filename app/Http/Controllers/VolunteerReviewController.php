@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\BloodRequest;
 use App\Models\BloodRequestEvent;
+use App\Models\BloodRequestMatch;
 use App\Services\DonorMatchingService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -31,7 +32,7 @@ class VolunteerReviewController extends Controller
                 $query->whereNull('expires_at')->orWhere('expires_at', '>', now());
             })
             ->withCount('matches')
-            ->withCount(['matches as accepted_matches_count' => fn ($query) => $query->where('response', 'accepted')])
+            ->withCount(['matches as accepted_matches_count' => fn ($query) => $query->where('response', 'accepted')->whereNotNull('contact_consent_at')])
             ->orderByRaw("CASE urgency WHEN 'emergency' THEN 0 WHEN 'urgent' THEN 1 ELSE 2 END")
             ->orderBy('created_at')
             ->get();
@@ -113,5 +114,83 @@ class VolunteerReviewController extends Controller
             'success',
             $result['created'].' নতুন donor shortlist-এ যুক্ত হয়েছে; মোট '.$result['total'].' জন donor-এর private dashboard inbox-এ request দেখা যাবে। কোনো SMS/push notification পাঠানো হয়নি।'
         );
+    }
+
+    public function contacts(Request $request, BloodRequest $bloodRequest): View
+    {
+        abort_unless(
+            $bloodRequest->requester_phone_verified_at
+                && in_array($bloodRequest->status, ['verified', 'matching', 'matched'], true)
+                && (!$bloodRequest->expires_at || $bloodRequest->expires_at->isFuture()),
+            404
+        );
+
+        $acceptedMatches = $bloodRequest->matches()
+            ->with('donor')
+            ->where('response', 'accepted')
+            ->whereNotNull('contact_consent_at')
+            ->get();
+
+        BloodRequestEvent::create([
+            'blood_request_id' => $bloodRequest->id,
+            'actor_type' => 'volunteer',
+            'actor_identifier' => $request->session()->get('volunteer_email'),
+            'event' => 'volunteer_contact_workspace_viewed',
+            'from_status' => $bloodRequest->status,
+            'to_status' => $bloodRequest->status,
+            'metadata' => ['consented_donor_count' => $acceptedMatches->count()],
+        ]);
+
+        return view('volunteer.contacts', compact('bloodRequest', 'acceptedMatches'));
+    }
+
+    public function logContact(Request $request, BloodRequest $bloodRequest): RedirectResponse
+    {
+        abort_unless(
+            $bloodRequest->requester_phone_verified_at
+                && in_array($bloodRequest->status, ['verified', 'matching', 'matched'], true)
+                && (!$bloodRequest->expires_at || $bloodRequest->expires_at->isFuture()),
+            404
+        );
+
+        $data = $request->validate([
+            'target' => ['required', 'in:requester,donor'],
+            'outcome' => ['required', 'in:called,connected,unreachable,follow_up'],
+            'match_id' => ['nullable', 'integer'],
+        ]);
+
+        $donorCode = null;
+
+        if ($data['target'] === 'donor') {
+            if (empty($data['match_id'])) {
+                throw ValidationException::withMessages(['match_id' => 'Donor নির্বাচন করুন।']);
+            }
+
+            $match = $bloodRequest->matches()
+                ->with('donor')
+                ->whereKey($data['match_id'])
+                ->where('response', 'accepted')
+                ->whereNotNull('contact_consent_at')
+                ->firstOrFail();
+
+            $donorCode = $match->donor->donor_code;
+        }
+
+        BloodRequestEvent::create([
+            'blood_request_id' => $bloodRequest->id,
+            'actor_type' => 'volunteer',
+            'actor_identifier' => $request->session()->get('volunteer_email'),
+            'event' => 'volunteer_contact_logged',
+            'from_status' => $bloodRequest->status,
+            'to_status' => $bloodRequest->status,
+            'metadata' => [
+                'target' => $data['target'],
+                'outcome' => $data['outcome'],
+                'donor_code' => $donorCode,
+            ],
+        ]);
+
+        return redirect()->route('volunteer.requests.contacts', $bloodRequest)
+            ->with('success', 'Contact attempt-এর ফলাফল নথিভুক্ত হয়েছে। কোনো ফোন নম্বর audit log-এ রাখা হয়নি।');
     }
 }

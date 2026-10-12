@@ -37,6 +37,8 @@ Route::middleware('volunteer')->prefix('volunteer')->name('volunteer.')->group(f
     Route::get('/requests', [VolunteerReviewController::class, 'index'])->name('requests');
     Route::post('/requests/{bloodRequest}/review', [VolunteerReviewController::class, 'review'])->whereNumber('bloodRequest')->middleware('throttle:20,1')->name('requests.review');
     Route::post('/requests/{bloodRequest}/match', [VolunteerReviewController::class, 'match'])->whereNumber('bloodRequest')->middleware('throttle:10,1')->name('requests.match');
+    Route::get('/requests/{bloodRequest}/contacts', [VolunteerReviewController::class, 'contacts'])->whereNumber('bloodRequest')->name('requests.contacts');
+    Route::post('/requests/{bloodRequest}/contacts/log', [VolunteerReviewController::class, 'logContact'])->whereNumber('bloodRequest')->middleware('throttle:20,1')->name('requests.contacts.log');
 });
 
 Route::view('/about', 'about')->name('about');
