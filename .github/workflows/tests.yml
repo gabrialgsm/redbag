@@ -17,6 +17,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Prepare test environment
+        run: cp .env.example .env
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
