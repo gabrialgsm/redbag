@@ -3,7 +3,7 @@
 @section('content')
 <section class="simple-page"><div class="container narrow">
 <span class="eyebrow">রক্ত প্রয়োজন?</span><h1>রক্তের জন্য আবেদন করুন</h1>
-<p>জরুরি হলে দ্রুত request submit করুন। Verification-এর পর RED BAG কাছাকাছি available donor খুঁজে যোগাযোগের ব্যবস্থা করবে।</p>
+<p>আবেদন জমা দিন। বর্তমানে স্বয়ংক্রিয় donor matching, notification বা volunteer review queue চালু নেই। আবেদন জমা দেওয়া রক্ত পাওয়ার নিশ্চয়তা নয়।</p>
 @if(session('success'))<div class="alert success">{{ session('success') }}</div>@endif
 @if($errors->any())<div class="alert error"><strong>অনুগ্রহ করে তথ্যগুলো ঠিক করুন:</strong><ul>@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>@endif
 <form class="request-form" method="POST" action="{{ route('blood.request.store') }}">

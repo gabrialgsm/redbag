@@ -9,7 +9,7 @@
             <div>
                 <span class="eyebrow">RED BAG • DONOR DASHBOARD</span>
                 <h1>স্বাগতম, {{ $donor->name }} ❤️</h1>
-                <p class="muted">আপনি যখন available থাকবেন, RED BAG প্রয়োজন অনুযায়ী আপনার কাছে সাহায্যের alert পাঠাতে পারবে।</p>
+                <p class="muted">আপনার availability এখানে আপডেট করতে পারবেন। বর্তমানে donor matching, request alert বা donor response workflow চালু নেই।</p>
             </div>
             <form method="POST" action="{{ route('donor.logout') }}">
                 @csrf
@@ -98,7 +98,7 @@
 
         <div class="privacy-banner">
             <strong>🔒 আপনার তথ্য নিরাপদ</strong>
-            <span>আপনার mobile number বা ব্যক্তিগত তথ্য public donor search-এ দেখানো হবে না। প্রয়োজন হলে verification ও consent-এর পরে connection তৈরি হবে।</span>
+            <span>আপনার mobile number বা ব্যক্তিগত তথ্য public donor search-এ দেখানো হয় না। Consent-aware contact handoff এখনো তৈরি হয়নি।</span>
         </div>
     </div>
 </section>
