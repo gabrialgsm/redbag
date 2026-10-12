@@ -7,8 +7,7 @@
     <div class="form-card otp-card">
         <span class="eyebrow">RED BAG • নিরাপদ যাচাই</span>
         <h1>মোবাইল নম্বর যাচাই করুন</h1>
-        <p class="muted">আপনার নম্বর <strong>{{ $challenge->phone }}</strong>-এ পাঠানো ৬ সংখ্যার OTP দিন। OTP ৫ মিনিট কার্যকর থাকবে।</p>
-
+        <p class="muted">আপনার নম্বর <strong>{{ substr($challenge->phone, 0, 3).'******'.substr($challenge->phone, -2) }}</strong>-এর জন্য তৈরি OTP দিন। OTP ৫ মিনিট কার্যকর থাকবে।</p>
         <form method="POST" action="{{ route('otp.verify', $challenge) }}" class="stack-form">
             @csrf
             <label>OTP Code
@@ -18,14 +17,12 @@
             @error('phone') <div class="field-error">{{ $message }}</div> @enderror
             <button class="btn btn-primary" type="submit">Verify & Continue</button>
         </form>
-
         <form method="POST" action="{{ route('otp.resend', $challenge) }}" class="otp-resend-form">
             @csrf
             <button class="btn btn-soft btn-full" type="submit">নতুন OTP চাই</button>
         </form>
-
         <div class="notice notice-info">
-            <strong>Development mode:</strong> SMS provider এখনো যুক্ত করা হয়নি। বর্তমান log driver OTP-টি Laravel log-এ লিখে রাখে; production-এ SMS provider যুক্ত করার পর এই flow একই থাকবে।
+            <strong>সীমাবদ্ধতা:</strong> Production SMS provider এখনো যুক্ত হয়নি। OTP যাচাইয়ের আগে donor বা request-কে verified হিসেবে ধরা হবে না।
         </div>
     </div>
 </section>

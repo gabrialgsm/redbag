@@ -12,8 +12,12 @@ use Illuminate\View\View;
 
 class OtpController extends Controller
 {
-    public function show(OtpChallenge $challenge): View|RedirectResponse
+    public function show(OtpChallenge $challenge, OtpService $otpService): View|RedirectResponse
     {
+        if (!$otpService->deliveryConfigured()) {
+            return redirect()->route('home')->with('error', 'মোবাইল OTP সেবা এখনো চালু হয়নি। এই মুহূর্তে নিবন্ধন বা আবেদন যাচাই করা যাচ্ছে না।');
+        }
+
         if ($challenge->verified_at) {
             return redirect()->route('home')->with('success', 'এই OTP verification ইতিমধ্যে সম্পন্ন হয়েছে।');
         }
@@ -23,6 +27,8 @@ class OtpController extends Controller
 
     public function resend(OtpChallenge $challenge, OtpService $otpService): RedirectResponse
     {
+        $otpService->ensureDeliveryConfigured();
+
         if ($challenge->verified_at) {
             return redirect()->route('home')->with('success', 'এই OTP verification ইতিমধ্যে সম্পন্ন হয়েছে।');
         }
@@ -39,6 +45,8 @@ class OtpController extends Controller
 
     public function verify(Request $request, OtpChallenge $challenge, OtpService $otpService): RedirectResponse
     {
+        $otpService->ensureDeliveryConfigured();
+
         $request->validate([
             'code' => ['required', 'digits:6'],
         ], [
@@ -59,7 +67,7 @@ class OtpController extends Controller
 
         if ($challenge->purpose === OtpService::PURPOSE_BLOOD_REQUEST) {
             BloodRequest::whereKey($challenge->reference_id)->update(['requester_phone_verified_at' => now()]);
-            return redirect()->route('blood.request')->with('success', 'আপনার মোবাইল নম্বর verified হয়েছে। এখন আবেদনটি verification queue-তে আছে।');
+            return redirect()->route('blood.request')->with('success', 'আপনার মোবাইল নম্বর verified হয়েছে। ফোন যাচাই আবেদনটির বাস্তবতা যাচাইয়ের বিকল্প নয়।');
         }
 
         return redirect()->route('home')->with('success', 'OTP verification সম্পন্ন হয়েছে।');

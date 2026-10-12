@@ -27,6 +27,9 @@ class BloodRequestController extends Controller
             'requester_phone.regex' => 'সঠিক বাংলাদেশি মোবাইল নম্বর দিন।',
         ]);
 
+        // Fail closed before creating a request if no safe OTP delivery exists.
+        $otpService->ensureDeliveryConfigured();
+
         $bloodRequest = BloodRequest::create([
             ...$data,
             'request_code' => 'RB-'.strtoupper(Str::random(8)),

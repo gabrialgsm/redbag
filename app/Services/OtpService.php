@@ -12,8 +12,29 @@ class OtpService
     public const PURPOSE_DONOR_REGISTRATION = 'donor_registration';
     public const PURPOSE_BLOOD_REQUEST = 'blood_request';
 
+    /**
+     * The log driver is for local development/testing only. No SMS driver is
+     * integrated yet, so production OTP flows must fail closed.
+     */
+    public function deliveryConfigured(): bool
+    {
+        return config('otp.driver', 'log') === 'log'
+            && app()->environment(['local', 'testing']);
+    }
+
+    public function ensureDeliveryConfigured(): void
+    {
+        if (!$this->deliveryConfigured()) {
+            throw ValidationException::withMessages([
+                'phone' => 'মোবাইল OTP সেবা এখনো চালু হয়নি। অনুগ্রহ করে পরে চেষ্টা করুন বা সরাসরি হাসপাতাল/অনুমোদিত রক্তদান সেবার সঙ্গে যোগাযোগ করুন।',
+            ]);
+        }
+    }
+
     public function send(string $phone, string $purpose, ?string $referenceType = null, ?int $referenceId = null): OtpChallenge
     {
+        $this->ensureDeliveryConfigured();
+
         $challenge = OtpChallenge::where('phone', $phone)
             ->where('purpose', $purpose)
             ->whereNull('verified_at')
@@ -43,20 +64,20 @@ class OtpService
             'expires_at' => now()->addMinutes(5),
         ]);
 
-        if (config('otp.driver', 'log') === 'log') {
-            Log::info('RED BAG OTP', [
-                'phone' => $phone,
-                'purpose' => $purpose,
-                'code' => $code,
-                'challenge_id' => $challenge->id,
-            ]);
-        }
+        // Plaintext OTP logging is deliberately restricted to local/testing.
+        Log::info('RED BAG development OTP', [
+            'purpose' => $purpose,
+            'code' => $code,
+            'challenge_id' => $challenge->id,
+        ]);
 
         return $challenge;
     }
 
     public function verify(OtpChallenge $challenge, string $code): void
     {
+        $this->ensureDeliveryConfigured();
+
         if ($challenge->verified_at) {
             throw ValidationException::withMessages(['code' => 'এই OTP ইতিমধ্যে ব্যবহার করা হয়েছে।']);
         }

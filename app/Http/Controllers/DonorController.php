@@ -25,10 +25,13 @@ class DonorController extends Controller
             'consent.accepted' => 'রক্তদাতা হিসেবে যুক্ত হতে সম্মতি দিতে হবে।',
         ]);
 
+        // Fail closed before creating a donor record if no safe OTP delivery exists.
+        $otpService->ensureDeliveryConfigured();
+
         $donor = Donor::create([
             ...$data,
             'donor_code' => 'RED-'.strtoupper(Str::random(8)),
-            'availability' => 'available',
+            'availability' => 'unavailable',
             'consent_at' => now(),
         ]);
 
