@@ -94,7 +94,7 @@ class DonorMatchingWorkflowTest extends TestCase
 
     public function test_accepted_donor_response_requires_contact_consent_and_public_tracking_hides_contact_data(): void
     {
-        $request = $this->request();
+        $request = $this->request(['status' => 'matching']);
         $donor = $this->donor();
         $match = BloodRequestMatch::create([
             'blood_request_id' => $request->id,
