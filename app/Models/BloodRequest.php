@@ -26,4 +26,9 @@ class BloodRequest extends Model
     {
         return $this->hasMany(BloodRequestEvent::class);
     }
+
+    public function matches(): HasMany
+    {
+        return $this->hasMany(BloodRequestMatch::class);
+    }
 }

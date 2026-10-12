@@ -28,4 +28,12 @@ class RequestTrackingTokenTest extends TestCase
         $this->get('/blood-request/status/RB-DOESNOTEXIST')
             ->assertNotFound();
     }
+
+    public function test_donor_inbox_requires_a_verified_donor_session(): void
+    {
+        $this->withoutVite();
+
+        $this->get('/donor/requests')
+            ->assertRedirect('/become-a-donor');
+    }
 }

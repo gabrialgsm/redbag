@@ -24,6 +24,8 @@ Route::post('/otp/{challenge}/resend', [OtpController::class, 'resend'])->whereN
 Route::post('/otp/{challenge}', [OtpController::class, 'verify'])->whereNumber('challenge')->middleware('throttle:10,1')->name('otp.verify');
 
 Route::get('/donor/dashboard', [DonorDashboardController::class, 'show'])->name('donor.dashboard');
+Route::get('/donor/requests', [DonorDashboardController::class, 'requests'])->middleware('throttle:30,1')->name('donor.requests');
+Route::post('/donor/requests/{match}/respond', [DonorDashboardController::class, 'respond'])->whereNumber('match')->middleware('throttle:10,1')->name('donor.requests.respond');
 Route::post('/donor/availability', [DonorDashboardController::class, 'availability'])->middleware('throttle:10,1')->name('donor.availability');
 Route::post('/donor/profile', [DonorDashboardController::class, 'profile'])->middleware('throttle:10,1')->name('donor.profile');
 Route::post('/donor/logout', [DonorDashboardController::class, 'logout'])->name('donor.logout');
@@ -34,6 +36,7 @@ Route::middleware('volunteer')->prefix('volunteer')->name('volunteer.')->group(f
     Route::post('/logout', [VolunteerAuthController::class, 'logout'])->name('logout');
     Route::get('/requests', [VolunteerReviewController::class, 'index'])->name('requests');
     Route::post('/requests/{bloodRequest}/review', [VolunteerReviewController::class, 'review'])->whereNumber('bloodRequest')->middleware('throttle:20,1')->name('requests.review');
+    Route::post('/requests/{bloodRequest}/match', [VolunteerReviewController::class, 'match'])->whereNumber('bloodRequest')->middleware('throttle:10,1')->name('requests.match');
 });
 
 Route::view('/about', 'about')->name('about');

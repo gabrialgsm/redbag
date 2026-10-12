@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\BloodRequest;
 use App\Models\BloodRequestEvent;
+use App\Services\DonorMatchingService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -23,7 +24,19 @@ class VolunteerReviewController extends Controller
             ->orderBy('created_at')
             ->paginate(20);
 
-        return view('volunteer.requests', compact('requests'));
+        $approvedRequests = BloodRequest::query()
+            ->whereIn('status', ['verified', 'matching', 'matched'])
+            ->whereNotNull('requester_phone_verified_at')
+            ->where(function ($query) {
+                $query->whereNull('expires_at')->orWhere('expires_at', '>', now());
+            })
+            ->withCount('matches')
+            ->withCount(['matches as accepted_matches_count' => fn ($query) => $query->where('response', 'accepted')])
+            ->orderByRaw("CASE urgency WHEN 'emergency' THEN 0 WHEN 'urgent' THEN 1 ELSE 2 END")
+            ->orderBy('created_at')
+            ->get();
+
+        return view('volunteer.requests', compact('requests', 'approvedRequests'));
     }
 
     public function review(Request $request, BloodRequest $bloodRequest): RedirectResponse
@@ -85,5 +98,20 @@ class VolunteerReviewController extends Controller
         };
 
         return redirect()->route('volunteer.requests')->with('success', $message);
+    }
+
+    public function match(BloodRequest $bloodRequest, DonorMatchingService $matchingService): RedirectResponse
+    {
+        $result = $matchingService->shortlist($bloodRequest);
+
+        if ($result['total'] === 0) {
+            return redirect()->route('volunteer.requests')
+                ->with('error', 'এই আবেদনটির জন্য একই blood group ও জেলায় ফোন-যাচাইকৃত, available donor পাওয়া যায়নি। কোনো notification পাঠানো হয়নি।');
+        }
+
+        return redirect()->route('volunteer.requests')->with(
+            'success',
+            $result['created'].' নতুন donor shortlist-এ যুক্ত হয়েছে; মোট '.$result['total'].' জন donor-এর private dashboard inbox-এ request দেখা যাবে। কোনো SMS/push notification পাঠানো হয়নি।'
+        );
     }
 }

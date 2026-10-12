@@ -33,5 +33,27 @@ jobs:
       - name: Prepare Laravel runtime directories
         run: mkdir -p bootstrap/cache storage/framework/cache/data storage/framework/sessions storage/framework/views storage/logs
 
+      - name: Configure SQLite for CI only
+        run: |
+          cat > config/database.php <<'PHP'
+          <?php
+          return [
+              'default' => env('DB_CONNECTION', 'sqlite'),
+              'connections' => [
+                  'sqlite' => [
+                      'driver' => 'sqlite',
+                      'url' => env('DB_URL'),
+                      'database' => env('DB_DATABASE', ':memory:'),
+                      'prefix' => '',
+                      'foreign_key_constraints' => true,
+                  ],
+              ],
+              'migrations' => [
+                  'table' => 'migrations',
+                  'update_date_on_publish' => true,
+              ],
+          ];
+          PHP
+
       - name: Run automated tests
         run: php artisan test

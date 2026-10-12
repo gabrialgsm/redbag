@@ -2,8 +2,7 @@
 @section('title','আবেদনের অবস্থা — RED BAG')
 @section('content')
 <section class="simple-page"><div class="container narrow">
-<span class="eyebrow">Private request tracking</span>
-<h1>আবেদনের অবস্থা</h1>
+<span class="eyebrow">Private request tracking</span><h1>আবেদনের অবস্থা</h1>
 @if(session('success'))<div class="alert success">{{ session('success') }}</div>@endif
 @php
 $statusLabel = $isExpired
@@ -12,7 +11,7 @@ $statusLabel = $isExpired
         'pending_verification' => $bloodRequest->requester_phone_verified_at ? 'Volunteer review অপেক্ষমাণ' : 'ফোন যাচাই অপেক্ষমাণ',
         'needs_info' => 'অতিরিক্ত তথ্য প্রয়োজন',
         'verified' => 'Volunteer review সম্পন্ন — donor পাওয়া নিশ্চিত নয়',
-        'matching' => 'সমন্বয়ের পর্যায়ে',
+        'matching' => 'Donor shortlist তৈরি হয়েছে; donor response অপেক্ষমাণ',
         'matched' => 'Donor response পাওয়া গেছে — donation নিশ্চিত নয়',
         'completed' => 'সম্পন্ন হিসেবে নিশ্চিত করা হয়েছে',
         'cancelled' => 'আবেদন বন্ধ / বাতিল',
@@ -26,6 +25,7 @@ $eventLabels = [
     'request_rejected' => 'Review-এর পর আবেদন বন্ধ করা হয়েছে',
     'more_information_requested' => 'অতিরিক্ত তথ্য প্রয়োজন',
     'requester_cancelled' => 'আবেদনকারী আবেদন বাতিল করেছেন',
+    'donor_response_accepted' => 'একজন donor volunteer-এর মাধ্যমে যোগাযোগে সম্মতি দিয়েছেন',
 ];
 @endphp
 <div class="dashboard-card">
@@ -37,23 +37,15 @@ $eventLabels = [
     <p>জমা: {{ $bloodRequest->created_at?->format('d M Y, h:i A') }}</p>
     @if($bloodRequest->expires_at)<p>আবেদনের সময়সীমা: {{ $bloodRequest->expires_at->format('d M Y, h:i A') }}</p>@endif
 </div>
-<div class="dashboard-card">
-    <h2>অগ্রগতির ইতিহাস</h2>
-    @if($events->isEmpty())
-        <p>এখনো কোনো status update নেই।</p>
-    @else
-        <ul>
-        @foreach($events as $event)
-            <li>{{ $eventLabels[$event->event] ?? 'আবেদনের অবস্থা আপডেট হয়েছে' }} — {{ $event->created_at?->format('d M Y, h:i A') }}</li>
-        @endforeach
-        </ul>
-    @endif
+<div class="dashboard-card"><h2>অগ্রগতির ইতিহাস</h2>
+    @if($events->isEmpty())<p>এখনো কোনো status update নেই।</p>
+    @else<ul>@foreach($events as $event)
+        @if(isset($eventLabels[$event->event]))<li>{{ $eventLabels[$event->event] }} — {{ $event->created_at?->format('d M Y, h:i A') }}</li>@endif
+    @endforeach</ul>@endif
 </div>
 @if(!$isExpired && in_array($bloodRequest->status, ['pending_verification', 'needs_info', 'verified'], true))
-<form method="POST" action="{{ route('blood.request.cancel', ['requestCode' => $bloodRequest->request_code]) }}" class="request-form">
-    @csrf
-    <input type="hidden" name="token" value="{{ $trackingToken }}">
-    <button class="btn btn-soft" type="submit">আমার আবেদন বাতিল করুন</button>
+<form method="POST" action="{{ route('blood.request.cancel', ['requestCode' => $bloodRequest->request_code]) }}" class="request-form">@csrf
+<input type="hidden" name="token" value="{{ $trackingToken }}"><button class="btn btn-soft" type="submit">আমার আবেদন বাতিল করুন</button>
 </form>
 @endif
 <p class="muted">এই private link-টি নিজের কাছে রাখুন। এতে requester বা patient-এর ফোন নম্বর প্রকাশ করা হয় না। ফোন যাচাই আবেদনটির বৈধতা প্রমাণ করে না; RED BAG চিকিৎসা পরামর্শ বা রক্ত পাওয়ার নিশ্চয়তা দেয় না।</p>
