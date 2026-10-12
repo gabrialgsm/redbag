@@ -7,6 +7,20 @@ use Tests\TestCase;
 
 class VolunteerAccessTest extends TestCase
 {
+    public function test_volunteer_login_page_renders_when_portal_is_not_configured(): void
+    {
+        $this->withoutVite();
+
+        config([
+            'redbag.volunteer_email' => null,
+            'redbag.volunteer_password_hash' => null,
+        ]);
+
+        $this->get('/volunteer/login')
+            ->assertOk()
+            ->assertSee('Volunteer portal এখন বন্ধ আছে', false);
+    }
+
     public function test_review_queue_redirects_when_volunteer_credentials_are_not_configured(): void
     {
         config([

@@ -10,11 +10,13 @@
 - Baseline before P0: `5a82b231ba5ea37f0da8dd388da5e654c9d1dca8`.
 - P0 truthfulness/security commit: `98c50836cee9b4ba5066de7cda9904e8e839ffbe`.
 - P0 follow-up copy correction: `d5c5e8ef15588f25e6eef2ec456ce27888ce3c5d`.
-- Test setup/health check: `500cc8c26495837d99576dce8e04b2643ab7f2dc` and `927d0cfff2e421bf4613f629a4bfa88f1dcb80fb`; clean test environment follow-up: `2fb132753baf0a8f430b51a19baddba0422a76ba`.
+- Test setup/health check commits: `500cc8c26495837d99576dce8e04b2643ab7f2dc`, `927d0cfff2e421bf4613f629a4bfa88f1dcb80fb`, and `2fb132753baf0a8f430b51a19baddba0422a76ba`.
+- Volunteer review increment: `7b8207783a74e9114a56d1ae96b1395172c2c941`; follow-up view fix: `8e1cf04686b30063338f04a77114be2595f7e662`.
+- Audit found the repository lacked `app/Http/Controllers/Controller.php`, although the existing controllers extend it. The shared base controller is being restored and controller-backed form actions need regression tests.
 - Stack: Laravel 13, PHP 8.3+, Blade, Vite/Tailwind CSS, MySQL-compatible DB.
-- Existing core data tables: donors, blood_requests, otp_challenges. New audit events table is additive.
-- Deployment now checks the public Laravel health endpoint `/up` after deployment.
-- Automated tests cover homepage truthfulness, safety copy and OTP production fail-closed behavior.
+- Existing core tables: donors, blood_requests, otp_challenges. New audit events table is additive.
+- Deployment workflow checks the public Laravel health endpoint `/up`.
+- Automated tests cover homepage truthfulness, safety copy, OTP production fail-closed behavior and volunteer authentication.
 
 ## Implemented in this increment
 
