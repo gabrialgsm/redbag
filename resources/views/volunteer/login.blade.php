@@ -7,7 +7,10 @@
 <p>এই portal শুধুমাত্র অনুমোদিত volunteer-এর জন্য।</p>
 @if(session('success'))<div class="alert success">{{ session('success') }}</div>@endif
 @if(session('error'))<div class="alert error">{{ session('error') }}</div>@endif
-@if(!$configured = (config('redbag.volunteer_email') && config('redbag.volunteer_password_hash')))
+@php
+$configured = (bool) (config('redbag.volunteer_email') && config('redbag.volunteer_password_hash'));
+@endphp
+@if(!$configured)
 <div class="alert error">Volunteer portal এখন বন্ধ আছে। Production .env-এ REDBAG_VOLUNTEER_EMAIL এবং REDBAG_VOLUNTEER_PASSWORD_HASH সেট করার পর এটি চালু হবে।</div>
 @endif
 @if($errors->any())<div class="alert error"><ul>@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>@endif
