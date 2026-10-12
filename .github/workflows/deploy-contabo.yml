@@ -51,5 +51,10 @@ jobs:
           ssh -i ~/.ssh/redbag_deploy -o IdentitiesOnly=yes "$CONTABO_USER@$CONTABO_HOST" \
             "cd '$REDBAG_DEPLOY_PATH' && bash scripts/deploy.sh"
 
+      - name: Verify public health endpoint
+        run: |
+          set -e
+          curl --fail --silent --show-error --retry 5 --retry-delay 5 --retry-connrefused https://www.redbag.app/up
+
       - name: Deployment finished
-        run: echo "RED BAG deployment completed."
+        run: echo "RED BAG deployment and public health check completed."
