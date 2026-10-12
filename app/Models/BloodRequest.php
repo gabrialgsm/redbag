@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class BloodRequest extends Model
 {
     protected $fillable = [
-        'request_code','requester_name','requester_phone','patient_name',
+        'request_code','tracking_token_hash','requester_name','requester_phone','patient_name',
         'blood_group','units','urgency','hospital_name','area','district',
         'needed_at','status','requester_phone_verified_at','expires_at',
     ];

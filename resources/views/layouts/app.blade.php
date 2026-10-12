@@ -2,6 +2,7 @@
 <html lang="bn">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#e31b23"><meta name="description" content="RED BAG — A Bag of Life. রক্তের প্রয়োজন হলে আবেদন জমা দিন, রক্তদাতা হিসেবে যুক্ত হোন।">
 <title>@yield('title','RED BAG — A Bag of Life')</title>
 @vite(['resources/css/app.css','resources/js/app.js'])

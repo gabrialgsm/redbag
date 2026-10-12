@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BloodRequest;
+use App\Models\BloodRequestEvent;
 use App\Models\Donor;
 use App\Models\OtpChallenge;
 use App\Services\OtpService;
@@ -66,8 +67,27 @@ class OtpController extends Controller
         }
 
         if ($challenge->purpose === OtpService::PURPOSE_BLOOD_REQUEST) {
-            BloodRequest::whereKey($challenge->reference_id)->update(['requester_phone_verified_at' => now()]);
-            return redirect()->route('blood.request')->with('success', 'আপনার মোবাইল নম্বর verified হয়েছে। ফোন যাচাই আবেদনটির বাস্তবতা যাচাইয়ের বিকল্প নয়।');
+            $bloodRequest = BloodRequest::findOrFail($challenge->reference_id);
+            $bloodRequest->update(['requester_phone_verified_at' => now()]);
+
+            BloodRequestEvent::create([
+                'blood_request_id' => $bloodRequest->id,
+                'actor_type' => 'requester',
+                'event' => 'requester_phone_verified',
+                'from_status' => $bloodRequest->status,
+                'to_status' => $bloodRequest->status,
+            ]);
+
+            $trackingToken = $request->session()->pull('redbag_request_tracking_'.$bloodRequest->request_code);
+
+            if ($trackingToken) {
+                return redirect()->route('blood.request.track', [
+                    'requestCode' => $bloodRequest->request_code,
+                    'token' => $trackingToken,
+                ])->with('success', 'ফোন নম্বর যাচাই হয়েছে। এই private link দিয়ে আবেদনটির অবস্থা দেখতে পারবেন।');
+            }
+
+            return redirect()->route('blood.request')->with('success', "আপনার মোবাইল নম্বর verified হয়েছে। Request ID: {$bloodRequest->request_code}।");
         }
 
         return redirect()->route('home')->with('success', 'OTP verification সম্পন্ন হয়েছে।');
