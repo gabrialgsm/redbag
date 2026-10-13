@@ -47,10 +47,6 @@ class VolunteerReviewController extends Controller
             'reason' => ['nullable', 'string', 'max:1000'],
         ]);
 
-        if ($bloodRequest->status !== 'pending_verification') {
-            abort(409, 'এই আবেদনটি আর review queue-তে নেই।');
-        }
-
         if (in_array($data['action'], ['reject', 'needs_info'], true)
             && mb_strlen(trim((string) ($data['reason'] ?? ''))) < 5) {
             throw ValidationException::withMessages([
@@ -58,13 +54,6 @@ class VolunteerReviewController extends Controller
             ]);
         }
 
-        if ($data['action'] === 'approve' && !$bloodRequest->requester_phone_verified_at) {
-            throw ValidationException::withMessages([
-                'action' => 'আবেদনকারীর ফোন যাচাই সম্পন্ন না হওয়া পর্যন্ত আবেদন approve করা যাবে না।',
-            ]);
-        }
-
-        $fromStatus = $bloodRequest->status;
         $event = match ($data['action']) {
             'approve' => 'request_approved',
             'reject' => 'request_rejected',
@@ -76,13 +65,27 @@ class VolunteerReviewController extends Controller
             'needs_info' => 'pending_verification',
         };
 
-        DB::transaction(function () use ($bloodRequest, $request, $data, $fromStatus, $event, $toStatus): void {
+        DB::transaction(function () use ($bloodRequest, $request, $data, $event, $toStatus): void {
+            $locked = BloodRequest::whereKey($bloodRequest->id)->lockForUpdate()->firstOrFail();
+
+            if ($locked->status !== 'pending_verification') {
+                abort(409, 'এই আবেদনটি আর review queue-তে নেই।');
+            }
+
+            if ($data['action'] === 'approve' && !$locked->requester_phone_verified_at) {
+                throw ValidationException::withMessages([
+                    'action' => 'আবেদনকারীর ফোন যাচাই সম্পন্ন না হওয়া পর্যন্ত আবেদন approve করা যাবে না।',
+                ]);
+            }
+
+            $fromStatus = $locked->status;
+
             if ($data['action'] !== 'needs_info') {
-                $bloodRequest->update(['status' => $toStatus]);
+                $locked->update(['status' => $toStatus]);
             }
 
             BloodRequestEvent::create([
-                'blood_request_id' => $bloodRequest->id,
+                'blood_request_id' => $locked->id,
                 'actor_type' => 'volunteer',
                 'actor_identifier' => $request->session()->get('volunteer_email'),
                 'event' => $event,
