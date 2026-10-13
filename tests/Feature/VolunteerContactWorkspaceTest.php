@@ -73,6 +73,7 @@ class VolunteerContactWorkspaceTest extends TestCase
         ]);
 
         $this->authenticateVolunteer();
+        $this->withoutVite();
 
         $this->get(route('volunteer.requests.contacts', $request))
             ->assertOk()
@@ -122,6 +123,7 @@ class VolunteerContactWorkspaceTest extends TestCase
     public function test_contact_workspace_is_not_public(): void
     {
         $request = $this->request();
+        $this->withoutVite();
 
         $this->get(route('volunteer.requests.contacts', $request))
             ->assertRedirect('/volunteer/login');
