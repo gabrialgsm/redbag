@@ -22,7 +22,7 @@ class EnsureVolunteer
 
         $sessionEmail = strtolower((string) $request->session()->get('volunteer_email', ''));
 
-        if (!$request->session()->boolean('volunteer_authenticated')
+        if (!(bool) $request->session()->get('volunteer_authenticated', false)
             || !hash_equals(strtolower((string) $email), $sessionEmail)) {
             return redirect()->route('volunteer.login')
                 ->with('error', 'এই পেজ দেখতে volunteer login প্রয়োজন।');
