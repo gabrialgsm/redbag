@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BloodRequest;
+use App\Models\Donor;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -45,15 +46,66 @@ class PublicRequestController extends Controller
 
     public function home(Request $request): View
     {
+        $availableDonors = Donor::query()
+            ->whereNotNull('phone_verified_at')
+            ->whereNotNull('consent_at')
+            ->where('availability', 'available');
+
+        $activeRequests = $this->activePublicRequests();
+
         $emergencyRequests = $this->urgencyOrder(
-            $this->applyPublicFilters($this->activePublicRequests(), $request)
-        )->limit(3)->get(['request_code', 'blood_group', 'units', 'urgency', 'hospital_name', 'district', 'area', 'needed_at', 'created_at']);
+            $this->applyPublicFilters(clone $activeRequests, $request)
+        )->limit(6)->get(['id', 'request_code', 'blood_group', 'units', 'urgency', 'hospital_name', 'district', 'area', 'needed_at', 'created_at']);
+
+        $donorsByDistrict = (clone $availableDonors)
+            ->whereNotNull('district')
+            ->where('district', '!=', '')
+            ->selectRaw('district, COUNT(*) as total')
+            ->groupBy('district')
+            ->get()
+            ->keyBy(fn ($row) => mb_strtolower(trim($row->district)));
+
+        $requestsByDistrict = (clone $activeRequests)
+            ->whereNotNull('district')
+            ->where('district', '!=', '')
+            ->selectRaw('district, COUNT(*) as total')
+            ->groupBy('district')
+            ->get()
+            ->keyBy(fn ($row) => mb_strtolower(trim($row->district)));
+
+        $districtKeys = $donorsByDistrict->keys()->merge($requestsByDistrict->keys())->unique();
+        $locationRows = $districtKeys->map(function ($key) use ($donorsByDistrict, $requestsByDistrict) {
+            $donorRow = $donorsByDistrict->get($key);
+            $requestRow = $requestsByDistrict->get($key);
+
+            return [
+                'district' => $donorRow?->district ?? $requestRow?->district,
+                'donors' => (int) ($donorRow->total ?? 0),
+                'requests' => (int) ($requestRow->total ?? 0),
+            ];
+        })->sort(function ($a, $b) {
+            return ($b['requests'] <=> $a['requests']) ?: ($b['donors'] <=> $a['donors']);
+        })->take(6)->values();
+
+        $selectedDistrict = trim((string) $request->query('district', ''));
+        $districtDonorCount = $selectedDistrict === '' ? null : (clone $availableDonors)
+            ->where('district', 'like', '%'.$selectedDistrict.'%')->count();
+        $districtRequestCount = $selectedDistrict === '' ? null : (clone $activeRequests)
+            ->where('district', 'like', '%'.$selectedDistrict.'%')->count();
+
+        $districtCount = $districtKeys->count();
 
         return view('home', [
             'emergencyRequests' => $emergencyRequests,
             'selectedBloodGroup' => $request->query('blood_group', ''),
-            'selectedDistrict' => $request->query('district', ''),
+            'selectedDistrict' => $selectedDistrict,
             'hasSearch' => $request->filled('blood_group') || $request->filled('district'),
+            'locationRows' => $locationRows,
+            'availableDonorCount' => (clone $availableDonors)->count(),
+            'activeRequestCount' => (clone $activeRequests)->count(),
+            'districtCount' => $districtCount,
+            'districtDonorCount' => $districtDonorCount,
+            'districtRequestCount' => $districtRequestCount,
         ]);
     }
 
