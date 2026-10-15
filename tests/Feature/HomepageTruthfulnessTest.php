@@ -32,6 +32,43 @@ class HomepageTruthfulnessTest extends TestCase
         $response->assertDontSee('সাম্প্রতিক রক্তের আবেদন', false);
     }
 
+    public function test_homepage_blood_search_filters_verified_requests_and_orders_by_urgency(): void
+    {
+        $this->withoutVite();
+
+        foreach ([
+            ['RB-SEARCH01', 'O+', 'emergency', 'Dhaka', 'Urgent Search Hospital'],
+            ['RB-SEARCH02', 'O+', 'normal', 'Dhaka', 'Routine Search Hospital'],
+            ['RB-SEARCH03', 'A+', 'urgent', 'Chattogram', 'Other Group Hospital'],
+        ] as [$code, $group, $urgency, $district, $hospital]) {
+            $request = BloodRequest::create([
+                'request_code' => $code,
+                'tracking_token_hash' => hash('sha256', $code),
+                'requester_name' => 'Private Person',
+                'requester_phone' => '01712345678',
+                'blood_group' => $group,
+                'units' => 1,
+                'urgency' => $urgency,
+                'hospital_name' => $hospital,
+                'district' => $district,
+                'status' => 'verified',
+                'expires_at' => now()->addHours(8),
+            ]);
+            $request->forceFill(['requester_phone_verified_at' => now()])->save();
+        }
+
+        $response = $this->get('/?blood_group=O%2B&district=Dhaka');
+
+        $response->assertOk();
+        $response->assertSee('Urgent Search Hospital', false);
+        $response->assertSee('Routine Search Hospital', false);
+        $response->assertDontSee('Other Group Hospital', false);
+        $this->assertLessThan(
+            strpos($response->getContent(), 'Routine Search Hospital'),
+            strpos($response->getContent(), 'Urgent Search Hospital')
+        );
+    }
+
     public function test_donor_finding_page_explains_safe_matching_process_without_claiming_guaranteed_donation(): void
     {
         $this->withoutVite();
