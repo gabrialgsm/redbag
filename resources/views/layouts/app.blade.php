@@ -10,7 +10,7 @@
 <body>
 <header class="site-header"><div class="container nav-wrap">
 <a href="{{ route('home') }}" class="brand"><img src="/images/redbag-logo.svg" alt="RedBag logo"></a>
-<nav class="desktop-nav"><a href="{{ route('home') }}">হোম</a><a href="{{ route('blood.request') }}">রক্তের জন্য আবেদন</a><a href="{{ route('donor.register') }}">রক্ত দিন</a><a href="{{ route('campaigns') }}">ক্যাম্পেইন</a><a href="{{ route('about') }}">আমাদের সম্পর্কে</a><a href="#contact">যোগাযোগ</a></nav>
+<nav class="desktop-nav"><a href="{{ route('home') }}">হোম</a><a href="{{ route('blood.request') }}">রক্তের জন্য আবেদন</a><a href="{{ route('emergency.requests') }}">জরুরি অনুরোধ</a><a href="{{ route('donor.register') }}">রক্ত দিন</a><a href="{{ route('campaigns') }}">ক্যাম্পেইন</a><a href="{{ route('about') }}">আমাদের সম্পর্কে</a><a href="#contact">যোগাযোগ</a></nav>
 <div class="nav-actions">@if(session('donor_id'))<a class="btn btn-primary btn-small" href="{{ route('donor.dashboard') }}">আমার Dashboard</a>@else<a class="btn btn-primary btn-small" href="{{ route('donor.register') }}">রেজিস্টার</a>@endif</div>
 </div></header>
 @if(session('success'))<div class="container notice notice-info" role="status">{{ session('success') }}</div>@endif
