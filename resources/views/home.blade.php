@@ -18,6 +18,18 @@
     </div>
 </section>
 
+<section class="blood-search-section" aria-labelledby="blood-search-title">
+    <div class="container blood-search-layout">
+        <div class="blood-search-intro"><span class="eyebrow">দ্রুত খুঁজুন</span><h2 id="blood-search-title">কোথায়, কোন গ্রুপের রক্ত প্রয়োজন?</h2><p>যাচাইকৃত সক্রিয় অনুরোধের তালিকা থেকে রক্তের গ্রুপ ও জেলা অনুযায়ী খুঁজুন।</p></div>
+        <form class="blood-search-form" method="GET" action="{{ route('home') }}">
+            <label><span>রক্তের গ্রুপ</span><select name="blood_group"><option value="">সব গ্রুপ</option>@foreach(['A+','A-','B+','B-','AB+','AB-','O+','O-'] as $group)<option value="{{ $group }}" @selected(($selectedBloodGroup ?? '') === $group)>{{ $group }}</option>@endforeach</select></label>
+            <label><span>জেলা</span><input type="text" name="district" value="{{ $selectedDistrict ?? '' }}" maxlength="80" placeholder="যেমন: ঢাকা, চট্টগ্রাম"></label>
+            <button type="submit" class="btn btn-primary">রক্ত খুঁজুন <span aria-hidden="true">⌕</span></button>
+            @if(($hasSearch ?? false))<a class="blood-search-reset" href="{{ route('home') }}">ফিল্টার মুছুন</a>@endif
+        </form>
+    </div>
+</section>
+
 <section class="service-actions-section service-actions-featured" id="main-services">
     <div class="container">
         <div class="service-section-intro"><span class="eyebrow">আপনার জন্য ৪টি সহজ সেবা</span><h2>আপনি কী করতে চান?</h2><p>আপনার প্রয়োজন অনুযায়ী একটি সেবা বেছে নিন।</p></div>
@@ -39,17 +51,7 @@
     </div>
 </section>
 
-<section class="blood-search-section" aria-labelledby="blood-search-title">
-    <div class="container blood-search-layout">
-        <div class="blood-search-intro"><span class="eyebrow">দ্রুত খুঁজুন</span><h2 id="blood-search-title">কোথায়, কোন গ্রুপের রক্ত প্রয়োজন?</h2><p>যাচাইকৃত সক্রিয় অনুরোধের তালিকা থেকে রক্তের গ্রুপ ও জেলা অনুযায়ী খুঁজুন।</p></div>
-        <form class="blood-search-form" method="GET" action="{{ route('home') }}">
-            <label><span>রক্তের গ্রুপ</span><select name="blood_group"><option value="">সব গ্রুপ</option>@foreach(['A+','A-','B+','B-','AB+','AB-','O+','O-'] as $group)<option value="{{ $group }}" @selected(($selectedBloodGroup ?? '') === $group)>{{ $group }}</option>@endforeach</select></label>
-            <label><span>জেলা</span><input type="text" name="district" value="{{ $selectedDistrict ?? '' }}" maxlength="80" placeholder="যেমন: ঢাকা, চট্টগ্রাম"></label>
-            <button type="submit" class="btn btn-primary">রক্ত খুঁজুন <span aria-hidden="true">⌕</span></button>
-            @if(($hasSearch ?? false))<a class="blood-search-reset" href="{{ route('home') }}">ফিল্টার মুছুন</a>@endif
-        </form>
-    </div>
-</section>
+
 
 <section class="service-emergency-section">
     <div class="container">
