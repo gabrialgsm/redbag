@@ -1,9 +1,9 @@
 <?php
 
-namespace App\\Http\\Controllers;
+namespace App\Http\Controllers;
 
-use App\\Models\\BloodRequest;
-use Illuminate\\View\\View;
+use App\Models\BloodRequest;
+use Illuminate\View\View;
 
 class PublicRequestController extends Controller
 {
