@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PublicRequestController::class, 'home'])->name('home');
 Route::get('/emergency-requests', [PublicRequestController::class, 'emergencies'])->name('emergency.requests');
+Route::view('/find-donor', 'find-donor')->name('donor.find');
 
 Route::get('/blood-request', fn () => view('blood-request'))->name('blood.request');
 Route::post('/blood-request', [BloodRequestController::class, 'store'])->middleware('throttle:5,1')->name('blood.request.store');
