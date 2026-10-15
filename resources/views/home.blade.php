@@ -39,17 +39,29 @@
     </div>
 </section>
 
+<section class="blood-search-section" aria-labelledby="blood-search-title">
+    <div class="container blood-search-layout">
+        <div class="blood-search-intro"><span class="eyebrow">দ্রুত খুঁজুন</span><h2 id="blood-search-title">কোথায়, কোন গ্রুপের রক্ত প্রয়োজন?</h2><p>যাচাইকৃত সক্রিয় অনুরোধের তালিকা থেকে রক্তের গ্রুপ ও জেলা অনুযায়ী খুঁজুন।</p></div>
+        <form class="blood-search-form" method="GET" action="{{ route('home') }}">
+            <label><span>রক্তের গ্রুপ</span><select name="blood_group"><option value="">সব গ্রুপ</option>@foreach(['A+','A-','B+','B-','AB+','AB-','O+','O-'] as $group)<option value="{{ $group }}" @selected(($selectedBloodGroup ?? '') === $group)>{{ $group }}</option>@endforeach</select></label>
+            <label><span>জেলা</span><input type="text" name="district" value="{{ $selectedDistrict ?? '' }}" maxlength="80" placeholder="যেমন: ঢাকা, চট্টগ্রাম"></label>
+            <button type="submit" class="btn btn-primary">রক্ত খুঁজুন <span aria-hidden="true">⌕</span></button>
+            @if(($hasSearch ?? false))<a class="blood-search-reset" href="{{ route('home') }}">ফিল্টার মুছুন</a>@endif
+        </form>
+    </div>
+</section>
+
 <section class="service-emergency-section">
     <div class="container">
-        <div class="service-list-heading"><div><span class="eyebrow">সাহায্যের প্রয়োজন</span><h2>জরুরি রক্তের অনুরোধ</h2><p>শুধু ফোন-যাচাইকৃত এবং volunteer review-এ অনুমোদিত সক্রিয় অনুরোধ।</p></div><a class="service-view-all" href="{{ route('emergency.requests') }}">সব অনুরোধ দেখুন <span>→</span></a></div>
+        <div class="service-list-heading"><div><span class="eyebrow">সাহায্যের প্রয়োজন</span><h2>রক্তের অনুরোধ — জরুরি আগে</h2><p>অতি জরুরি, জরুরি, তারপর অন্যান্য সক্রিয় অনুরোধ। শুধু ফোন-যাচাইকৃত ও volunteer review-এ অনুমোদিত আবেদন দেখানো হয়।</p></div><a class="service-view-all" href="{{ route('emergency.requests') }}">সব অনুরোধ দেখুন <span>→</span></a></div>
         @if($emergencyRequests->isEmpty())
-            <div class="service-no-requests"><span class="service-no-requests-icon">♥</span><div><strong>এই মুহূর্তে তালিকায় কোনো যাচাইকৃত জরুরি অনুরোধ নেই</strong><p>নতুন অনুরোধ যাচাই হলে এখানে দেখানো হবে। জরুরি প্রয়োজনে হাসপাতাল বা অনুমোদিত রক্তদান সেবায় সরাসরি যোগাযোগ করুন।</p></div></div>
+            <div class="service-no-requests"><span class="service-no-requests-icon">♥</span><div><strong>এই মুহূর্তে তালিকায় কোনো যাচাইকৃত সক্রিয় অনুরোধ নেই</strong><p>নতুন অনুরোধ যাচাই হলে এখানে দেখানো হবে। জরুরি প্রয়োজনে হাসপাতাল বা অনুমোদিত রক্তদান সেবায় সরাসরি যোগাযোগ করুন।</p></div></div>
         @else
             <div class="service-emergency-grid">
                 @foreach($emergencyRequests as $bloodRequest)
                     <article class="service-emergency-card">
-                        <div class="service-emergency-card-top"><span class="blood-badge">{{ $bloodRequest->blood_group }}</span><span class="service-urgency {{ $bloodRequest->urgency === 'emergency' ? 'is-emergency' : '' }}">{{ $bloodRequest->urgency === 'emergency' ? 'অতি জরুরি' : 'জরুরি' }}</span></div>
-                        <h3>{{ $bloodRequest->units }} ব্যাগ {{ $bloodRequest->blood_group }} রক্ত প্রয়োজন</h3>
+                        <div class="service-emergency-card-top"><span class="blood-badge">{{ $bloodRequest->blood_group }}</span><span class="service-urgency {{ $bloodRequest->urgency === 'emergency' ? 'is-emergency' : ($bloodRequest->urgency === 'urgent' ? 'is-urgent' : 'is-normal') }}">{{ $bloodRequest->urgency === 'emergency' ? '🔴 অতি জরুরি' : ($bloodRequest->urgency === 'urgent' ? '🟠 জরুরি' : 'সাধারণ') }}</span></div>
+                        <h3>{{ $bloodRequest->units }} ব্যাগ {{ $bloodRequest->blood_group }} রক্ত প্রয়োজন</h3><p><span>প্রয়োজনের সময়</span><strong>{{ $bloodRequest->needed_at ? $bloodRequest->needed_at->format('d M, h:i A') : 'আবেদনকারীর সঙ্গে যাচাই করুন' }}</strong></p>
                         <p><span>হাসপাতাল</span><strong>{{ $bloodRequest->hospital_name }}</strong></p>
                         <p><span>এলাকা</span><strong>{{ $bloodRequest->district }}@if($bloodRequest->area), {{ $bloodRequest->area }}@endif</strong></p>
                         <div class="service-request-code">অনুরোধ: {{ $bloodRequest->request_code }} <span>✓ পর্যালোচিত</span></div>
