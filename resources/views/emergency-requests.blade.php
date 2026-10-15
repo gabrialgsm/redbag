@@ -5,8 +5,14 @@
     <div class="section-heading left">
         <span class="eyebrow">জরুরি রক্তের অনুরোধ</span>
         <h1>যেখানে এখন সাহায্য প্রয়োজন</h1>
-        <p>শুধু ফোন-যাচাইকৃত ও volunteer review-এ অনুমোদিত, সক্রিয় জরুরি/দ্রুত অনুরোধ দেখানো হয়। তালিকায় থাকা মানেই রক্তের ব্যবস্থা নিশ্চিত নয়।</p>
+        <p>শুধু ফোন-যাচাইকৃত ও volunteer review-এ অনুমোদিত সক্রিয় অনুরোধ দেখানো হয়। অতি জরুরি আবেদন আগে দেখানো হয়। তালিকায় থাকা মানেই রক্তের ব্যবস্থা নিশ্চিত নয়।</p>
     </div>
+    <form class="blood-search-form blood-search-form-page" method="GET" action="{{ route('emergency.requests') }}" aria-label="রক্তের অনুরোধ খুঁজুন">
+        <label><span>রক্তের গ্রুপ</span><select name="blood_group"><option value="">সব গ্রুপ</option>@foreach(['A+','A-','B+','B-','AB+','AB-','O+','O-'] as $group)<option value="{{ $group }}" @selected(($selectedBloodGroup ?? '') === $group)>{{ $group }}</option>@endforeach</select></label>
+        <label><span>জেলা</span><input type="text" name="district" value="{{ $selectedDistrict ?? '' }}" maxlength="80" placeholder="জেলা লিখুন"></label>
+        <button class="btn btn-primary" type="submit">অনুরোধ খুঁজুন</button>
+        @if(($selectedBloodGroup ?? '') !== '' || ($selectedDistrict ?? '') !== '')<a class="blood-search-reset" href="{{ route('emergency.requests') }}">সব অনুরোধ</a>@endif
+    </form>
     @if($emergencyRequests->isEmpty())
         <div class="public-empty-state">
             <div class="public-empty-icon">♥</div>
@@ -20,7 +26,7 @@
             <article class="public-request-card">
                 <div class="public-request-top">
                     <span class="blood-badge">{{ $bloodRequest->blood_group }}</span>
-                    <span class="public-urgency {{ $bloodRequest->urgency === 'emergency' ? 'is-emergency' : '' }}">{{ $bloodRequest->urgency === 'emergency' ? 'অতি জরুরি' : 'জরুরি' }}</span>
+                    <span class="public-urgency {{ $bloodRequest->urgency === 'emergency' ? 'is-emergency' : ($bloodRequest->urgency === 'urgent' ? 'is-urgent' : 'is-normal') }}">{{ $bloodRequest->urgency === 'emergency' ? '🔴 অতি জরুরি' : ($bloodRequest->urgency === 'urgent' ? '🟠 জরুরি' : 'সাধারণ') }}</span>
                 </div>
                 <h2>{{ $bloodRequest->units }} ব্যাগ {{ $bloodRequest->blood_group }} রক্ত প্রয়োজন</h2>
                 <p><strong>হাসপাতাল:</strong> {{ $bloodRequest->hospital_name }}</p>
