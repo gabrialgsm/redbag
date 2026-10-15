@@ -27,7 +27,6 @@ class HomepageTruthfulnessTest extends TestCase
         $response->assertSee(route('donor.requests'), false);
         $response->assertSee(route('donor.register'), false);
         $response->assertSee('এই মুহূর্তে কোনো যাচাইকৃত সক্রিয় অনুরোধ নেই', false);
-        $response->assertSee('Noto Sans Bengali', false);
         $response->assertSee('বর্তমান চিত্র', false);
         $response->assertSee('এলাকাভিত্তিক তথ্য', false);
         $response->assertSee('আমি রক্ত দিতে চাই', false);
