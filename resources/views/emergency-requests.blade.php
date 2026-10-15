@@ -33,6 +33,7 @@
                 <p><strong>এলাকা:</strong> {{ $bloodRequest->district }}@if($bloodRequest->area), {{ $bloodRequest->area }}@endif</p>
                 <p><strong>প্রয়োজন:</strong> {{ $bloodRequest->needed_at ? $bloodRequest->needed_at->format('d M, h:i A') : 'সময় আবেদনকারীর সঙ্গে যাচাই করুন' }}</p>
                 <div class="public-request-foot"><span>অনুরোধের কোড: {{ $bloodRequest->request_code }}</span><span>পর্যালোচিত</span></div>
+                <a class="request-donate-action" href="{{ session('donor_id') ? route('donor.dashboard') : route('donor.register') }}"><span>♥</span><span><strong>{{ session('donor_id') ? 'ডোনার ড্যাশবোর্ড খুলুন' : 'রক্ত দিতে চান?' }}</strong><small>{{ session('donor_id') ? 'আপনার availability হালনাগাদ করুন' : 'ডোনার হিসেবে যুক্ত হয়ে সাহায্য করুন' }}</small></span><span aria-hidden="true">→</span></a>
             </article>
         @endforeach
         </div>
