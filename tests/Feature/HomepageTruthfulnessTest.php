@@ -31,7 +31,7 @@ class HomepageTruthfulnessTest extends TestCase
     {
         $this->withoutVite();
 
-        BloodRequest::create([
+        $verifiedRequest = BloodRequest::create([
             'request_code' => 'RB-PUBLIC001',
             'tracking_token_hash' => hash('sha256', str_repeat('a', 64)),
             'requester_name' => 'Private Requester',
@@ -43,9 +43,9 @@ class HomepageTruthfulnessTest extends TestCase
             'district' => 'Dhaka',
             'area' => 'Dhanmondi',
             'status' => 'verified',
-            'requester_phone_verified_at' => now(),
             'expires_at' => now()->addHours(5),
         ]);
+        $verifiedRequest->forceFill(['requester_phone_verified_at' => now()])->save();
 
         BloodRequest::create([
             'request_code' => 'RB-PENDING01',
