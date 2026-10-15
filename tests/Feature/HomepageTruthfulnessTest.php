@@ -25,7 +25,7 @@ class HomepageTruthfulnessTest extends TestCase
         $response->assertSee(route('donor.find'), false);
         $response->assertSee(route('donor.requests'), false);
         $response->assertSee(route('donor.register'), false);
-        $response->assertSee('এই মুহূর্তে তালিকায় কোনো যাচাইকৃত জরুরি অনুরোধ নেই', false);
+        $response->assertSee('এই মুহূর্তে তালিকায় কোনো যাচাইকৃত সক্রিয় অনুরোধ নেই', false);
         $response->assertDontSee('৮,৬০০+', false);
         $response->assertDontSee('২১০+', false);
         $response->assertDontSee('Square Hospital', false);
