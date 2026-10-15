@@ -1,15 +1,17 @@
 <?php
 
-use App\Http\Controllers\BloodRequestController;
-use App\Http\Controllers\DonorController;
-use App\Http\Controllers\OtpController;
-use App\Http\Controllers\DonorDashboardController;
-use App\Http\Controllers\RequestTrackingController;
-use App\Http\Controllers\VolunteerAuthController;
-use App\Http\Controllers\VolunteerReviewController;
-use Illuminate\Support\Facades\Route;
+use App\\Http\\Controllers\\BloodRequestController;
+use App\\Http\\Controllers\\DonorController;
+use App\\Http\\Controllers\\OtpController;
+use App\\Http\\Controllers\\DonorDashboardController;
+use App\\Http\\Controllers\\PublicRequestController;
+use App\\Http\\Controllers\\RequestTrackingController;
+use App\\Http\\Controllers\\VolunteerAuthController;
+use App\\Http\\Controllers\\VolunteerReviewController;
+use Illuminate\\Support\\Facades\\Route;
 
-Route::view('/', 'home')->name('home');
+Route::get('/', [PublicRequestController::class, 'home'])->name('home');
+Route::get('/emergency-requests', [PublicRequestController::class, 'emergencies'])->name('emergency.requests');
 
 Route::get('/blood-request', fn () => view('blood-request'))->name('blood.request');
 Route::post('/blood-request', [BloodRequestController::class, 'store'])->middleware('throttle:5,1')->name('blood.request.store');
