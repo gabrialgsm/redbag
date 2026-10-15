@@ -21,7 +21,7 @@ class HomepageTruthfulnessTest extends TestCase
         $response->assertSee('রক্তের জন্য আবেদন করুন', false);
         $response->assertSee('ডোনার খুঁজুন', false);
         $response->assertSee('অনুরোধে সাড়া দিন', false);
-        $response->assertSee('ডোনার হোন', false);
+        $response->assertSee('আমি রক্ত দিতে চাই', false);
         $response->assertSee(route('blood.request'), false);
         $response->assertSee(route('donor.find'), false);
         $response->assertSee(route('donor.requests'), false);
