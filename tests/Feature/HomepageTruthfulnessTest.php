@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\BloodRequest;
+use App\Models\Donor;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -17,15 +18,19 @@ class HomepageTruthfulnessTest extends TestCase
         $response = $this->get('/');
 
         $response->assertOk();
-        $response->assertSee('রক্ত লাগবে? অনুরোধ করুন', false);
+        $response->assertSee('রক্তের জন্য আবেদন করুন', false);
         $response->assertSee('ডোনার খুঁজুন', false);
-        $response->assertSee('কারও request-এ সাড়া দিন', false);
+        $response->assertSee('অনুরোধে সাড়া দিন', false);
         $response->assertSee('ডোনার হোন', false);
         $response->assertSee(route('blood.request'), false);
         $response->assertSee(route('donor.find'), false);
         $response->assertSee(route('donor.requests'), false);
         $response->assertSee(route('donor.register'), false);
-        $response->assertSee('এই মুহূর্তে তালিকায় কোনো যাচাইকৃত সক্রিয় অনুরোধ নেই', false);
+        $response->assertSee('এই মুহূর্তে কোনো যাচাইকৃত সক্রিয় অনুরোধ নেই', false);
+        $response->assertSee('Noto Sans Bengali', false);
+        $response->assertSee('বর্তমান চিত্র', false);
+        $response->assertSee('এলাকাভিত্তিক তথ্য', false);
+        $response->assertSee('আমি রক্ত দিতে চাই', false);
         $response->assertDontSee('৮,৬০০+', false);
         $response->assertDontSee('২১০+', false);
         $response->assertDontSee('Square Hospital', false);
@@ -67,6 +72,53 @@ class HomepageTruthfulnessTest extends TestCase
             strpos($response->getContent(), 'Routine Search Hospital'),
             strpos($response->getContent(), 'Urgent Search Hospital')
         );
+    }
+
+    public function test_homepage_shows_only_real_eligible_donor_counts_by_district(): void
+    {
+        $this->withoutVite();
+
+        Donor::create([
+            'donor_code' => 'RED-COUNT01',
+            'name' => 'Verified Available Donor',
+            'phone' => '01712345678',
+            'blood_group' => 'O+',
+            'district' => 'Dhaka',
+            'area' => 'Dhanmondi',
+            'availability' => 'available',
+            'consent_at' => now(),
+            'phone_verified_at' => now(),
+        ]);
+
+        Donor::create([
+            'donor_code' => 'RED-COUNT02',
+            'name' => 'Not Available Donor',
+            'phone' => '01812345678',
+            'blood_group' => 'A+',
+            'district' => 'Dhaka',
+            'availability' => 'unavailable',
+            'consent_at' => now(),
+            'phone_verified_at' => now(),
+        ]);
+
+        Donor::create([
+            'donor_code' => 'RED-COUNT03',
+            'name' => 'Unverified Donor',
+            'phone' => '01912345678',
+            'blood_group' => 'B+',
+            'district' => 'Dhaka',
+            'availability' => 'available',
+            'consent_at' => now(),
+        ]);
+
+        $response = $this->get('/?district=Dhaka#location-search');
+
+        $response->assertOk();
+        $response->assertSee('Dhaka', false);
+        $response->assertSee('উপলভ্য যাচাইকৃত ডোনার', false);
+        $response->assertSee('RED BAG-এর বর্তমান চিত্র', false);
+        $response->assertDontSee('Verified Available Donor', false);
+        $response->assertDontSee('01712345678', false);
     }
 
     public function test_donor_finding_page_explains_safe_matching_process_without_claiming_guaranteed_donation(): void
