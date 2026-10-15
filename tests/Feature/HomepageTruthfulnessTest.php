@@ -17,14 +17,32 @@ class HomepageTruthfulnessTest extends TestCase
         $response = $this->get('/');
 
         $response->assertOk();
-        $response->assertSee('আমার রক্ত প্রয়োজন', false);
-        $response->assertSee('জরুরি অনুরোধ দেখুন', false);
-        $response->assertSee('আমি রক্ত দিতে চাই', false);
+        $response->assertSee('রক্ত লাগবে? অনুরোধ করুন', false);
+        $response->assertSee('ডোনার খুঁজুন', false);
+        $response->assertSee('কারও request-এ সাড়া দিন', false);
+        $response->assertSee('ডোনার হোন', false);
+        $response->assertSee(route('blood.request'), false);
+        $response->assertSee(route('donor.find'), false);
+        $response->assertSee(route('donor.requests'), false);
+        $response->assertSee(route('donor.register'), false);
         $response->assertSee('এই মুহূর্তে তালিকায় কোনো যাচাইকৃত জরুরি অনুরোধ নেই', false);
         $response->assertDontSee('৮,৬০০+', false);
         $response->assertDontSee('২১০+', false);
         $response->assertDontSee('Square Hospital', false);
         $response->assertDontSee('সাম্প্রতিক রক্তের আবেদন', false);
+    }
+
+    public function test_donor_finding_page_explains_safe_matching_process_without_claiming_guaranteed_donation(): void
+    {
+        $this->withoutVite();
+
+        $response = $this->get('/find-donor');
+
+        $response->assertOk();
+        $response->assertSee('রক্তদাতা খুঁজুন', false);
+        $response->assertSee('রক্তের অনুরোধ করুন', false);
+        $response->assertSee('Donor-এর ব্যক্তিগত ফোন নম্বর public directory-তে দেখানো হয় না।', false);
+        $response->assertSee('রক্ত পাওয়া নিশ্চিত করে না।', false);
     }
 
     public function test_public_emergency_list_only_shows_verified_active_requests_and_hides_phone_numbers(): void
