@@ -1,32 +1,41 @@
 @extends('layouts.app')
 @section('title','RED BAG — রক্তের সাহায্য, সহজে')
 @section('content')
-<section class="service-hero">
+<section class="service-hero service-hero-compact">
     <div class="container service-hero-grid">
         <div class="service-hero-copy">
             <span class="service-kicker"><span class="service-kicker-dot"></span> মানুষের পাশে মানুষ</span>
-            <h1>রক্তের প্রয়োজন?<br><span>শুরু করুন এখান থেকে।</span></h1>
-            <p>জটিলতা নয়, সহজ সাহায্য। রক্তের অনুরোধ জমা দিন, যাচাইকৃত জরুরি অনুরোধ দেখুন, অথবা রক্তদাতা হিসেবে যুক্ত হোন।</p>
-            <a class="service-main-cta" href="{{ route('blood.request') }}"><span class="service-cta-icon">＋</span><span><strong>আমার রক্ত প্রয়োজন</strong><small>সহজ ফর্মে অনুরোধ জমা দিন</small></span><span class="service-cta-arrow">→</span></a>
-            <div class="service-hero-foot"><span>✓ বাংলা ভাষায় সহজ ব্যবহার</span><span>✓ ব্যক্তিগত তথ্যের সুরক্ষা</span></div>
+            <h1>রক্তের প্রয়োজনে<br><span>পাশে আছে RED BAG.</span></h1>
+            <p>রক্তের অনুরোধ করুন, donor খোঁজার প্রক্রিয়া শুরু করুন, অন্যের অনুরোধে সাড়া দিন—অথবা নিজেই একজন রক্তদাতা হয়ে উঠুন।</p>
+            <div class="service-hero-foot"><span>✓ সহজ বাংলা অভিজ্ঞতা</span><span>✓ ব্যক্তিগত তথ্যের সুরক্ষা</span></div>
         </div>
         <div class="service-hero-art" aria-hidden="true">
             <div class="service-art-ring ring-one"></div><div class="service-art-ring ring-two"></div>
             <div class="service-art-drop"><span>♥</span></div>
-            <div class="service-art-note note-top"><span class="service-note-icon">♥</span><span><strong>রক্তদান</strong><small>মানবিকতার বন্ধন</small></span></div>
-            <div class="service-art-note note-bottom"><span class="service-note-icon">＋</span><span><strong>সাহায্যের শুরু</strong><small>একটি সহজ পদক্ষেপ</small></span></div>
+            <div class="service-art-note note-top"><span class="service-note-icon">♥</span><span><strong>একটু সাহায্য</strong><small>বাঁচাতে পারে জীবন</small></span></div>
+            <div class="service-art-note note-bottom"><span class="service-note-icon">＋</span><span><strong>আপনিও হতে পারেন</strong><small>কারও আশার কারণ</small></span></div>
         </div>
     </div>
 </section>
 
-<section class="service-actions-section">
+<section class="service-actions-section service-actions-featured" id="main-services">
     <div class="container">
-        <div class="service-section-intro"><span class="eyebrow">আপনার প্রয়োজন বেছে নিন</span><h2>কীভাবে সাহায্য করতে পারি?</h2><p>যে কাজটি করতে চান, সেটিতে চাপ দিন।</p></div>
-        <div class="service-action-grid">
-            <a class="service-action-card action-request" href="{{ route('blood.request') }}"><span class="service-action-symbol">＋</span><span class="service-action-copy"><strong>রক্তের অনুরোধ করুন</strong><small>রোগীর জন্য প্রয়োজনীয় তথ্য দিন</small></span><span class="service-action-arrow">→</span></a>
-            <a class="service-action-card" href="{{ route('emergency.requests') }}"><span class="service-action-symbol symbol-alert">!</span><span class="service-action-copy"><strong>জরুরি অনুরোধ দেখুন</strong><small>যাচাইকৃত সক্রিয় অনুরোধের তালিকা</small></span><span class="service-action-arrow">→</span></a>
-            <a class="service-action-card" href="{{ route('donor.register') }}"><span class="service-action-symbol symbol-donor">♥</span><span class="service-action-copy"><strong>আমি রক্ত দিতে চাই</strong><small>রক্তদাতা হিসেবে যুক্ত হোন</small></span><span class="service-action-arrow">→</span></a>
+        <div class="service-section-intro"><span class="eyebrow">আপনার জন্য ৪টি সহজ সেবা</span><h2>আপনি কী করতে চান?</h2><p>আপনার প্রয়োজন অনুযায়ী একটি সেবা বেছে নিন।</p></div>
+        <div class="service-action-grid service-action-grid-four">
+            <a class="service-action-card service-action-feature action-request" href="{{ route('blood.request') }}">
+                <span class="service-action-symbol">＋</span><span class="service-action-copy"><strong>রক্ত লাগবে? অনুরোধ করুন</strong><small>রোগী ও হাসপাতালের তথ্য দিয়ে রক্তের অনুরোধ জমা দিন</small><span class="service-action-link">অনুরোধ জমা দিন →</span></span>
+            </a>
+            <a class="service-action-card service-action-feature" href="{{ route('donor.find') }}">
+                <span class="service-action-symbol symbol-search">⌕</span><span class="service-action-copy"><strong>ডোনার খুঁজুন</strong><small>রক্তের গ্রুপ ও এলাকা জানিয়ে donor খোঁজার প্রক্রিয়া শুরু করুন</small><span class="service-action-link">ডোনার খুঁজুন →</span></span>
+            </a>
+            <a class="service-action-card service-action-feature" href="{{ route('donor.requests') }}">
+                <span class="service-action-symbol symbol-help">♥</span><span class="service-action-copy"><strong>কারও request-এ সাড়া দিন</strong><small>আপনার donor inbox-এ আসা অনুরোধে সাহায্য করতে পারবেন</small><span class="service-action-link">অনুরোধ দেখুন →</span></span>
+            </a>
+            <a class="service-action-card service-action-feature" href="{{ route('donor.register') }}">
+                <span class="service-action-symbol symbol-donor">♡</span><span class="service-action-copy"><strong>ডোনার হোন</strong><small>রক্তদাতা হিসেবে যুক্ত হয়ে প্রয়োজনের সময় সাহায্য করুন</small><span class="service-action-link">রেজিস্টার করুন →</span></span>
+            </a>
         </div>
+        <p class="service-actions-note">নিরাপত্তার জন্য donor-এর ব্যক্তিগত ফোন নম্বর প্রকাশ করা হয় না। Request review ও donor shortlist-এর মাধ্যমে সমন্বয়ের চেষ্টা করা হয়—রক্ত পাওয়া নিশ্চিত নয়।</p>
     </div>
 </section>
 
@@ -54,11 +63,11 @@
 
 <section class="service-how-section">
     <div class="container">
-        <div class="service-section-intro"><span class="eyebrow">সহজ ধাপে</span><h2>RED BAG কীভাবে কাজ করে?</h2><p>সহজভাবে শুরু করুন, পরবর্তী পদক্ষেপ স্পষ্টভাবে জানুন।</p></div>
+        <div class="service-section-intro"><span class="eyebrow">সহজ ধাপে</span><h2>RED BAG কীভাবে কাজ করে?</h2><p>সাহায্যের প্রতিটি ধাপ সহজ ও দায়িত্বশীল রাখার চেষ্টা করি।</p></div>
         <div class="service-how-grid">
-            <article><span>১</span><h3>অনুরোধ জমা দিন</h3><p>রক্তের গ্রুপ, হাসপাতাল ও প্রয়োজনের সময় জানান।</p></article>
-            <article><span>২</span><h3>ফোন যাচাই ও review</h3><p>ফোন যাচাই এবং অনুরোধের মানবিক পর্যালোচনা আলাদা ধাপ।</p></article>
-            <article><span>৩</span><h3>স্বেচ্ছাসেবী সমন্বয়</h3><p>উপযুক্ত donor সাড়া দিলে সমন্বয়ের চেষ্টা করা হবে; রক্ত পাওয়া নিশ্চিত নয়।</p></article>
+            <article><span>১</span><h3>অনুরোধ বা donor registration</h3><p>আপনার প্রয়োজন বা রক্তদানের আগ্রহ অনুযায়ী তথ্য দিন।</p></article>
+            <article><span>২</span><h3>ফোন যাচাই ও volunteer review</h3><p>ফোন যাচাই এবং আবেদন review আলাদা ধাপ; volunteer অনুরোধ যাচাই করেন।</p></article>
+            <article><span>৩</span><h3>Donor সমন্বয়ের চেষ্টা</h3><p>উপযুক্ত donor shortlist হলে donor নিজের inbox-এ সাড়া দিতে পারেন।</p></article>
         </div>
     </div>
 </section>
@@ -68,6 +77,5 @@
         <div class="service-trust-mark">♥</div><div><span class="eyebrow">নিরাপত্তা আগে</span><h2>সহজ সেবা, দায়িত্বশীলভাবে</h2><p>ব্যক্তিগত ফোন নম্বর প্রকাশ্যে দেখানো হয় না। ফোন যাচাই মানেই অনুরোধের সত্যতা বা donation নিশ্চিত হওয়া নয়।</p></div><a class="btn btn-primary" href="{{ route('safety') }}">নিরাপত্তা সম্পর্কে জানুন →</a>
     </div>
 </section>
-
-<section class="service-bottom-cta"><div class="container"><span class="eyebrow">আপনিও পাশে দাঁড়াতে পারেন</span><h2>আজই রক্তদাতা হিসেবে যুক্ত হোন।</h2><p>আপনার দেওয়া তথ্য যাচাইয়ের মাধ্যমে নিরাপদ রক্তদাতা নেটওয়ার্ক গড়ে তুলতে সাহায্য করুন।</p><a class="btn btn-white btn-large" href="{{ route('donor.register') }}">রক্তদাতা হিসেবে নিবন্ধন করুন →</a></div></section>
+<section class="service-bottom-cta"><div class="container"><span class="eyebrow">আপনিও পাশে দাঁড়াতে পারেন</span><h2>একজন ডোনার হয়ে কারও পাশে দাঁড়ান।</h2><p>RED BAG donor network-এ যুক্ত হয়ে মানবিক সহায়তার অংশ হোন।</p><a class="btn btn-white btn-large" href="{{ route('donor.register') }}">ডোনার হোন →</a></div></section>
 @endsection
