@@ -145,3 +145,123 @@
 @keyframes urgency-pulse{0%,100%{box-shadow:0 0 0 0 rgba(227,27,35,.04)}50%{box-shadow:0 0 0 5px rgba(227,27,35,.10)}}
 @media(max-width:800px){.blood-search-layout{grid-template-columns:1fr;gap:18px}.blood-search-form{grid-template-columns:1fr 1fr}.blood-search-form button{grid-column:1/-1;width:100%}.blood-search-form-page{grid-template-columns:1fr 1fr}}
 @media(max-width:500px){.blood-search-section{padding:26px 0}.blood-search-form,.blood-search-form-page{grid-template-columns:1fr;padding:14px}.blood-search-form button{grid-column:auto}.blood-search-reset{grid-column:auto;text-align:left}}
+
+
+/* Bengali editorial typography and banner-free, action-first homepage */
+:root{--red:#d71920;--red-dark:#b9151b;--ink:#202124;--muted:#65676b;--line:#e8e8e8}
+body{font-family:"Noto Sans Bengali","Noto Serif Bengali",sans-serif;font-size:15px;line-height:1.7}
+h1,h2,h3,h4,.home-direct-heading h1,.home-section-heading h2,.live-stats-heading h2,.service-list-heading h2{font-family:"Noto Serif Bengali","Noto Sans Bengali",serif;letter-spacing:0;line-height:1.4}
+.site-header{height:auto;min-height:70px;background:#fff;backdrop-filter:none}
+.nav-wrap{min-height:70px}
+.desktop-nav{font-size:13px;gap:17px}
+.home-direct-section{padding:26px 0 18px;background:#fff}
+.home-direct-heading{margin-bottom:20px}
+.home-direct-heading .eyebrow{font-size:13px}
+.home-direct-heading h1{font-size:clamp(27px,3.2vw,39px);font-weight:700;margin:6px 0 7px}
+.home-direct-heading h1 span{color:var(--red)}
+.home-direct-heading p{margin:0;color:#646464;font-size:15px}
+.home-direct-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.home-primary-action{display:flex;align-items:center;gap:15px;min-width:0;padding:18px 20px;border:1px solid #e9dada;border-radius:12px;background:#fff;transition:border-color .18s,box-shadow .18s,transform .18s}
+.home-primary-action:hover{border-color:#e7a0a0;box-shadow:0 8px 22px rgba(60,0,0,.06);transform:translateY(-1px)}
+.home-request-action{background:#fff4f4;border-color:#efc7c7}
+.home-donate-action{background:#f7fbf7;border-color:#d8e9da}
+.home-action-icon{display:grid;place-items:center;flex:0 0 46px;width:46px;height:46px;border-radius:11px;background:#ffe1e1;color:var(--red);font-size:26px;font-weight:700}
+.home-donate-action .home-action-icon{background:#e4f3e7;color:#287c40}
+.home-primary-action>span:nth-child(2){display:grid;gap:3px;min-width:0;flex:1}
+.home-primary-action strong{font-size:18px;line-height:1.5;color:#202124}
+.home-primary-action small{font-size:12px;color:#696969;line-height:1.65}
+.home-action-arrow{font-size:24px;color:var(--red)}
+.home-quick-links{display:flex;gap:22px;flex-wrap:wrap;margin-top:15px;padding:0 2px}
+.home-quick-links a{font-size:13px;color:#555;text-decoration:underline;text-decoration-color:#d8d8d8;text-underline-offset:4px}
+.home-quick-links a:hover{color:var(--red)}
+.blood-search-section{padding:23px 0;background:#fbfbfb;border-top:1px solid #ededed;border-bottom:1px solid #ededed}
+.blood-search-layout{grid-template-columns:.85fr 1.15fr;gap:25px}
+.blood-search-intro h2{font-size:25px;font-weight:700;margin:5px 0}
+.blood-search-intro p{font-size:13px}
+.blood-search-form{border:1px solid #e4e4e4;border-radius:10px;padding:13px;box-shadow:none;grid-template-columns:1fr 1fr auto;gap:10px}
+.blood-search-form input,.blood-search-form select{height:43px;border-radius:7px;border-color:#d9d9d9;font-size:13px}
+.blood-search-form button{height:43px;border-radius:7px;font-size:13px}
+.location-insights-section{padding:34px 0 30px;background:#fff}
+.home-section-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:18px}
+.home-section-heading h2,.live-stats-heading h2{font-size:27px;font-weight:700;margin:4px 0}
+.home-section-heading p{max-width:790px;color:#686868;font-size:13px;line-height:1.8;margin:5px 0 0}
+.location-selected-summary{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:12px;margin:18px 0;padding:15px;background:#fbf7f7;border:1px solid #efdfdf;border-radius:10px}
+.location-selected-summary>div{display:grid;gap:3px;align-content:center;padding:5px 12px;border-right:1px solid #e7d9d9}
+.location-selected-summary>div:last-child{border-right:0}
+.location-summary-label,.location-selected-summary span{font-size:12px;color:#686868}
+.location-selected-summary strong{font-size:22px;color:var(--red);line-height:1.5}
+.location-selected-summary>div:first-child strong{font-size:17px;color:#222}
+.location-table-wrap{overflow-x:auto;border:1px solid #e6e6e6;border-radius:10px}
+.location-table{width:100%;border-collapse:collapse;font-size:13px}
+.location-table th,.location-table td{padding:13px 16px;text-align:left;border-bottom:1px solid #eee}
+.location-table thead th{font-size:12px;color:#686868;background:#f8f8f8;font-weight:700}
+.location-table tbody tr:last-child th,.location-table tbody tr:last-child td{border-bottom:0}
+.location-table tbody tr:hover{background:#fffafa}
+.location-table tbody th{font-weight:700}
+.location-count{display:inline-flex;min-width:30px;justify-content:center;padding:3px 9px;border-radius:5px;background:#f0f0f0;color:#4f4f4f;font-weight:700}
+.donor-count{background:#edf6ef;color:#24743b}
+.request-count-active{background:#fff0df;color:#9b4d00}
+.location-filter-link{font-size:12px;font-weight:700;color:var(--red);white-space:nowrap}
+.location-empty-state{padding:22px;border:1px solid #e7e7e7;border-radius:10px;background:#fafafa}
+.location-empty-state strong{font-size:15px}
+.location-empty-state p{margin:5px 0 0;font-size:13px;color:#666}
+.location-data-note,.live-stats-note{font-size:11px;line-height:1.8;color:#777;margin:12px 0 0}
+.live-stats-section{padding:27px 0;background:#f8f8f8;border-top:1px solid #eaeaea;border-bottom:1px solid #eaeaea}
+.live-stats-heading{margin-bottom:15px}
+.live-stats-heading h2{font-size:24px}
+.live-stats-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.live-stats-grid article{display:grid;grid-template-columns:38px 1fr;column-gap:12px;align-items:center;padding:15px 17px;border:1px solid #e6e6e6;border-radius:10px;background:#fff}
+.live-stat-icon{grid-row:span 2;display:grid;place-items:center;width:38px;height:38px;border-radius:9px;background:#fff0f0;color:var(--red);font-size:20px}
+.live-stats-grid article strong{font-size:25px;line-height:1.3;color:#202124;font-variant-numeric:tabular-nums}
+.live-stats-grid article>span:last-child{font-size:12px;line-height:1.6;color:#666}
+.home-emergency-section{padding:38px 0;background:#fff}
+.home-emergency-section .service-list-heading{align-items:flex-end}
+.home-emergency-section .service-emergency-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.home-emergency-section .service-emergency-card{border-radius:10px;border-color:#e4e4e4;box-shadow:none;padding:17px}
+.home-emergency-section .service-emergency-card h3{font-family:"Noto Serif Bengali","Noto Sans Bengali",serif;font-size:17px;line-height:1.6}
+.home-emergency-section .service-emergency-card p{font-size:12px}
+.home-emergency-section .service-request-code{font-size:11px}
+.request-donate-action{display:flex;align-items:center;gap:10px;margin-top:14px;padding:11px 12px;border:1px solid #f0d0d0;border-radius:8px;background:#fff7f7;color:#b9151b}
+.request-donate-action>span:first-child{display:grid;place-items:center;flex:0 0 31px;width:31px;height:31px;border-radius:8px;background:#ffe3e3;font-size:16px}
+.request-donate-action>span:nth-child(2){display:grid;gap:2px;flex:1;min-width:0}
+.request-donate-action strong{font-size:13px}
+.request-donate-action small{font-size:11px;color:#6c6c6c;line-height:1.5}
+.request-donate-action>span:last-child{font-size:19px}
+.home-secondary-services{padding:28px 0 40px;border-top:1px solid #eee}
+.home-secondary-services .home-section-heading{margin-bottom:14px}
+.home-secondary-services .home-section-heading h2{font-size:23px}
+.home-secondary-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.home-secondary-grid a{display:grid;gap:5px;padding:16px;border:1px solid #e5e5e5;border-radius:9px;background:#fff}
+.home-secondary-grid a:hover{border-color:#e3b4b4;background:#fffafa}
+.home-secondary-grid strong{font-size:14px}
+.home-secondary-grid span{font-size:12px;line-height:1.7;color:#6a6a6a}
+.service-bottom-cta{display:none}
+@media(max-width:900px){
+ .desktop-nav{gap:10px;font-size:12px}
+ .home-emergency-section .service-emergency-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .blood-search-layout{grid-template-columns:1fr;gap:13px}
+}
+@media(max-width:650px){
+ .site-header{min-height:62px}.nav-wrap{min-height:62px;gap:12px}.brand img{width:108px}.desktop-nav{display:none}
+ .home-direct-section{padding:21px 0 15px}.home-direct-heading h1{font-size:27px}.home-direct-heading p{font-size:13px}
+ .home-direct-actions{grid-template-columns:1fr;gap:10px}
+ .home-primary-action{padding:14px;gap:11px;border-radius:9px}
+ .home-action-icon{width:41px;height:41px;flex-basis:41px;font-size:23px}
+ .home-primary-action strong{font-size:16px}.home-primary-action small{font-size:11px}
+ .home-quick-links{gap:12px 18px;margin-top:12px}
+ .blood-search-section{padding:20px 0}.blood-search-intro h2{font-size:22px}
+ .blood-search-form,.blood-search-form-page{grid-template-columns:1fr 1fr;padding:12px;border-radius:9px}
+ .blood-search-form button{grid-column:1/-1}.blood-search-reset{grid-column:1/-1;text-align:left}
+ .location-insights-section{padding:26px 0 23px}.home-section-heading h2,.live-stats-heading h2{font-size:22px}
+ .location-selected-summary{grid-template-columns:1fr 1fr;padding:10px;gap:4px}
+ .location-selected-summary>div{padding:7px;border-right:0}
+ .location-selected-summary>div:first-child{grid-column:1/-1;border-bottom:1px solid #e7d9d9}
+ .location-table th,.location-table td{padding:10px 9px;font-size:11px}
+ .location-table thead th{font-size:10px}
+ .location-filter-link{font-size:10px}
+ .live-stats-grid{grid-template-columns:1fr;gap:8px}
+ .live-stats-grid article{padding:11px 13px}
+ .home-emergency-section{padding:28px 0}.home-emergency-section .service-emergency-grid{grid-template-columns:1fr}
+ .home-emergency-section .service-list-heading{display:grid;gap:10px}
+ .home-secondary-grid{grid-template-columns:1fr}
+}
