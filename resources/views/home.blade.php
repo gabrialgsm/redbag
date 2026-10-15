@@ -1,22 +1,73 @@
 @extends('layouts.app')
-@section('title','RED BAG — A Bag of Life')
+@section('title','RED BAG — রক্তের সাহায্য, সহজে')
 @section('content')
-<section class="hero"><div class="container hero-grid"><div class="hero-copy">
-<span class="eyebrow">জাতি, ধর্ম ও দল নির্বিশেষে, রক্ত দিবো হাতে হাতে</span>
-<h1>মানুষ মানুষের জন্য<br><span>এক ব্যাগ রক্ত,</span><br>এক জীবনের আলো।</h1>
-<p>RED BAG রক্তের প্রয়োজনের তথ্য গ্রহণ করে এবং স্বেচ্ছাসেবী সমন্বয়ের মাধ্যমে সহায়তার চেষ্টা করে। বর্তমানে স্বয়ংক্রিয় donor matching বা SMS notification চালু নেই।</p>
-<div class="hero-actions"><a class="btn btn-primary btn-large" href="{{ route('blood.request') }}">রক্তের জন্য আবেদন করুন →</a><a class="btn btn-soft btn-large" href="{{ route('donor.register') }}">♥ &nbsp; আমি রক্ত দিতে চাই →</a></div>
-<a class="emergency-card" href="{{ route('blood.request') }}"><span class="emergency-icon">!</span><span><strong>জরুরি রক্ত প্রয়োজন?</strong><small>আবেদন জমা দিন। ফোন যাচাই হলেই আবেদনটি চিকিৎসাগতভাবে যাচাইকৃত হয় না; প্রয়োজনীয় মানবিক যাচাই এখনও দরকার।</small></span><span class="arrow">→</span></a>
-</div><div class="hero-visual"><div class="hero-glow"></div><div class="hero-quote">রক্ত দিয়ে<br>সহায়তার হাত<br>বাড়ান</div><div class="hand hand-top"></div><div class="hero-drop">♥</div><div class="hand hand-bottom"></div></div></div></section>
-<section class="stats-strip"><div class="container"><p>আমরা একটি স্বেচ্ছাসেবী রক্ত-সহায়তা নেটওয়ার্ক গড়ে তুলছি। যাচাইকৃত কার্যক্রমের পরিসংখ্যান প্রকাশ করার মতো তথ্য এখনো প্রস্তুত নয়।</p></div></section>
-<section class="section"><div class="container"><div class="section-heading"><span class="eyebrow">সহজ, দ্রুত, মানবিক</span><h2>RED BAG কীভাবে কাজ করে?</h2><p>এই মুহূর্তে আবেদন গ্রহণ ও donor registration-এর প্রাথমিক ধাপগুলো রয়েছে। বাকি সমন্বয় প্রক্রিয়া ধাপে ধাপে তৈরি হচ্ছে।</p></div><div class="steps-grid">
-<article class="step-card"><div class="step-icon">01</div><h3>আবেদন করুন</h3><p>প্রয়োজনীয় রক্তের তথ্য দিয়ে আবেদন জমা দিন।</p></article><div class="step-arrow">→</div>
-<article class="step-card"><div class="step-icon">02</div><h3>ফোন যাচাই</h3><p>OTP delivery production SMS provider যুক্ত না হওয়া পর্যন্ত সক্রিয় নয়।</p></article><div class="step-arrow">→</div>
-<article class="step-card"><div class="step-icon">03</div><h3>মানবিক পর্যালোচনা</h3><p>ফোন যাচাইয়ের পাশাপাশি আবেদনটির বাস্তবতা আলাদাভাবে যাচাই করা প্রয়োজন।</p></article><div class="step-arrow">→</div>
-<article class="step-card"><div class="step-icon">04</div><h3>সমন্বয়</h3><p>প্রয়োজন ও সম্মতি অনুযায়ী স্বেচ্ছাসেবী সমন্বয়ই আমাদের লক্ষ্য; automatic matching এখনো চালু নয়।</p></article>
-</div></div></section>
-<section class="section section-muted"><div class="container coverage-grid"><div><div class="section-heading left"><span class="eyebrow">আমাদের অঙ্গীকার</span><h2>গোপনীয়তা ও বিশ্বাস আগে</h2><p>রক্তদাতার ফোন নম্বর বা সুনির্দিষ্ট অবস্থান প্রকাশ্যে দেখানো হবে না। ফোন যাচাই, আবেদন পর্যালোচনা এবং donation completion—এগুলো আলাদা বিষয়।</p></div><a class="btn btn-primary" href="{{ route('safety') }}">নিরাপত্তা ও গোপনীয়তা পড়ুন →</a></div><div class="map-card"><span>RED BAG • A BAG OF LIFE</span><div class="map-dots">মানুষ<br>মানুষের<br>পাশে</div></div></div></section>
-<section class="section section-muted"><div class="container"><div class="section-heading left"><span class="eyebrow">কেন RED BAG?</span><h2>বিশ্বাস, দায়িত্ব এবং মানবিকতা</h2></div><div class="feature-grid"><article><b>♥</b><h3>সহজ আবেদন</h3><p>রক্তের প্রয়োজনীয় তথ্য এক জায়গায় জমা দিন।</p></article><article><b>✓</b><h3>সততার সঙ্গে যাচাই</h3><p>ফোন যাচাইকে কখনোই চিকিৎসাগত বা অনুরোধের বৈধতার প্রমাণ বলা হয় না।</p></article><article><b>♟</b><h3>স্বেচ্ছাসেবী সমন্বয়</h3><p>মানুষের পাশে মানুষ দাঁড়ানোর একটি দায়িত্বশীল নেটওয়ার্ক গড়াই লক্ষ্য।</p></article><article><b>▥</b><h3>ধাপে ধাপে উন্নয়ন</h3><p>পরীক্ষিত না হওয়া ফিচারকে চালু বলে উপস্থাপন করা হবে না।</p></article></div></div></section>
-<section class="cta-band"><div class="container cta-inner"><div><span class="eyebrow">একটি ছোট সিদ্ধান্ত</span><h2>আপনার রক্ত অন্য কারো<br>নতুন জীবনের সূচনা হতে পারে।</h2><p>রক্তদাতা হিসেবে যুক্ত হতে নিবন্ধন ফর্ম ব্যবহার করুন।</p></div><a class="btn btn-white btn-large" href="{{ route('donor.register') }}">রক্তদাতা হিসেবে নিবন্ধন →</a></div></section>
-<section class="section section-muted"><div class="container faq-grid"><div><div class="section-heading left"><span class="eyebrow">সচরাচর জিজ্ঞাসা</span><h2>জেনে নিন</h2></div><details open><summary>আবেদন করলেই কি রক্তদাতা পাওয়া যাবে?</summary><p>না। বর্তমানে স্বয়ংক্রিয় matching বা notification চালু নেই। আবেদন জমা দেওয়া donor পাওয়া বা donation নিশ্চিত হওয়ার নিশ্চয়তা নয়।</p></details><details><summary>ফোন যাচাই কি আবেদনটি সত্য প্রমাণ করে?</summary><p>না। এটি শুধু নম্বরের নিয়ন্ত্রণ যাচাই করে। অনুরোধের বাস্তবতা আলাদাভাবে যাচাই করতে হবে।</p></details><details><summary>রক্তদাতার নম্বর কি প্রকাশ্যে দেখা যায়?</summary><p>না। RED BAG-এর লক্ষ্য donor-এর ব্যক্তিগত যোগাযোগের তথ্য গোপন রাখা।</p></details></div><div class="faq-callout"><div class="big-heart">♥</div><h3>নিরাপদে সহায়তা করুন</h3><p>জরুরি অবস্থায় হাসপাতাল বা অনুমোদিত রক্তদান সেবার সঙ্গে সরাসরি যোগাযোগ করুন।</p><a class="btn btn-primary" href="{{ route('safety') }}">নিরাপত্তা নির্দেশনা →</a></div></div></section>
+<section class="service-hero">
+    <div class="container service-hero-grid">
+        <div class="service-hero-copy">
+            <span class="service-kicker"><span class="service-kicker-dot"></span> মানুষের পাশে মানুষ</span>
+            <h1>রক্তের প্রয়োজন?<br><span>শুরু করুন এখান থেকে।</span></h1>
+            <p>জটিলতা নয়, সহজ সাহায্য। রক্তের অনুরোধ জমা দিন, যাচাইকৃত জরুরি অনুরোধ দেখুন, অথবা রক্তদাতা হিসেবে যুক্ত হোন।</p>
+            <a class="service-main-cta" href="{{ route('blood.request') }}"><span class="service-cta-icon">＋</span><span><strong>আমার রক্ত প্রয়োজন</strong><small>সহজ ফর্মে অনুরোধ জমা দিন</small></span><span class="service-cta-arrow">→</span></a>
+            <div class="service-hero-foot"><span>✓ বাংলা ভাষায় সহজ ব্যবহার</span><span>✓ ব্যক্তিগত তথ্যের সুরক্ষা</span></div>
+        </div>
+        <div class="service-hero-art" aria-hidden="true">
+            <div class="service-art-ring ring-one"></div><div class="service-art-ring ring-two"></div>
+            <div class="service-art-drop"><span>♥</span></div>
+            <div class="service-art-note note-top"><span class="service-note-icon">♥</span><span><strong>রক্তদান</strong><small>মানবিকতার বন্ধন</small></span></div>
+            <div class="service-art-note note-bottom"><span class="service-note-icon">＋</span><span><strong>সাহায্যের শুরু</strong><small>একটি সহজ পদক্ষেপ</small></span></div>
+        </div>
+    </div>
+</section>
+
+<section class="service-actions-section">
+    <div class="container">
+        <div class="service-section-intro"><span class="eyebrow">আপনার প্রয়োজন বেছে নিন</span><h2>কীভাবে সাহায্য করতে পারি?</h2><p>যে কাজটি করতে চান, সেটিতে চাপ দিন।</p></div>
+        <div class="service-action-grid">
+            <a class="service-action-card action-request" href="{{ route('blood.request') }}"><span class="service-action-symbol">＋</span><span class="service-action-copy"><strong>রক্তের অনুরোধ করুন</strong><small>রোগীর জন্য প্রয়োজনীয় তথ্য দিন</small></span><span class="service-action-arrow">→</span></a>
+            <a class="service-action-card" href="{{ route('emergency.requests') }}"><span class="service-action-symbol symbol-alert">!</span><span class="service-action-copy"><strong>জরুরি অনুরোধ দেখুন</strong><small>যাচাইকৃত সক্রিয় অনুরোধের তালিকা</small></span><span class="service-action-arrow">→</span></a>
+            <a class="service-action-card" href="{{ route('donor.register') }}"><span class="service-action-symbol symbol-donor">♥</span><span class="service-action-copy"><strong>আমি রক্ত দিতে চাই</strong><small>রক্তদাতা হিসেবে যুক্ত হোন</small></span><span class="service-action-arrow">→</span></a>
+        </div>
+    </div>
+</section>
+
+<section class="service-emergency-section">
+    <div class="container">
+        <div class="service-list-heading"><div><span class="eyebrow">সাহায্যের প্রয়োজন</span><h2>জরুরি রক্তের অনুরোধ</h2><p>শুধু ফোন-যাচাইকৃত এবং volunteer review-এ অনুমোদিত সক্রিয় অনুরোধ।</p></div><a class="service-view-all" href="{{ route('emergency.requests') }}">সব অনুরোধ দেখুন <span>→</span></a></div>
+        @if($emergencyRequests->isEmpty())
+            <div class="service-no-requests"><span class="service-no-requests-icon">♥</span><div><strong>এই মুহূর্তে তালিকায় কোনো যাচাইকৃত জরুরি অনুরোধ নেই</strong><p>নতুন অনুরোধ যাচাই হলে এখানে দেখানো হবে। জরুরি প্রয়োজনে হাসপাতাল বা অনুমোদিত রক্তদান সেবায় সরাসরি যোগাযোগ করুন।</p></div></div>
+        @else
+            <div class="service-emergency-grid">
+                @foreach($emergencyRequests as $bloodRequest)
+                    <article class="service-emergency-card">
+                        <div class="service-emergency-card-top"><span class="blood-badge">{{ $bloodRequest->blood_group }}</span><span class="service-urgency {{ $bloodRequest->urgency === 'emergency' ? 'is-emergency' : '' }}">{{ $bloodRequest->urgency === 'emergency' ? 'অতি জরুরি' : 'জরুরি' }}</span></div>
+                        <h3>{{ $bloodRequest->units }} ব্যাগ {{ $bloodRequest->blood_group }} রক্ত প্রয়োজন</h3>
+                        <p><span>হাসপাতাল</span><strong>{{ $bloodRequest->hospital_name }}</strong></p>
+                        <p><span>এলাকা</span><strong>{{ $bloodRequest->district }}@if($bloodRequest->area), {{ $bloodRequest->area }}@endif</strong></p>
+                        <div class="service-request-code">অনুরোধ: {{ $bloodRequest->request_code }} <span>✓ পর্যালোচিত</span></div>
+                    </article>
+                @endforeach
+            </div>
+        @endif
+        <p class="service-disclaimer">তালিকায় থাকা মানেই রক্ত পাওয়া নিশ্চিত নয়। RED BAG রোগী বা আবেদনকারীর ফোন নম্বর প্রকাশ করে না।</p>
+    </div>
+</section>
+
+<section class="service-how-section">
+    <div class="container">
+        <div class="service-section-intro"><span class="eyebrow">সহজ ধাপে</span><h2>RED BAG কীভাবে কাজ করে?</h2><p>সহজভাবে শুরু করুন, পরবর্তী পদক্ষেপ স্পষ্টভাবে জানুন।</p></div>
+        <div class="service-how-grid">
+            <article><span>১</span><h3>অনুরোধ জমা দিন</h3><p>রক্তের গ্রুপ, হাসপাতাল ও প্রয়োজনের সময় জানান।</p></article>
+            <article><span>২</span><h3>ফোন যাচাই ও review</h3><p>ফোন যাচাই এবং অনুরোধের মানবিক পর্যালোচনা আলাদা ধাপ।</p></article>
+            <article><span>৩</span><h3>স্বেচ্ছাসেবী সমন্বয়</h3><p>উপযুক্ত donor সাড়া দিলে সমন্বয়ের চেষ্টা করা হবে; রক্ত পাওয়া নিশ্চিত নয়।</p></article>
+        </div>
+    </div>
+</section>
+
+<section class="service-trust-section">
+    <div class="container service-trust-inner">
+        <div class="service-trust-mark">♥</div><div><span class="eyebrow">নিরাপত্তা আগে</span><h2>সহজ সেবা, দায়িত্বশীলভাবে</h2><p>ব্যক্তিগত ফোন নম্বর প্রকাশ্যে দেখানো হয় না। ফোন যাচাই মানেই অনুরোধের সত্যতা বা donation নিশ্চিত হওয়া নয়।</p></div><a class="btn btn-primary" href="{{ route('safety') }}">নিরাপত্তা সম্পর্কে জানুন →</a>
+    </div>
+</section>
+
+<section class="service-bottom-cta"><div class="container"><span class="eyebrow">আপনিও পাশে দাঁড়াতে পারেন</span><h2>আজই রক্তদাতা হিসেবে যুক্ত হোন।</h2><p>আপনার দেওয়া তথ্য যাচাইয়ের মাধ্যমে নিরাপদ রক্তদাতা নেটওয়ার্ক গড়ে তুলতে সাহায্য করুন।</p><a class="btn btn-white btn-large" href="{{ route('donor.register') }}">রক্তদাতা হিসেবে নিবন্ধন করুন →</a></div></section>
 @endsection
